@@ -330,7 +330,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
 }
 
 EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, std::unordered_map<std::string,
-        std::vector<SCOP> *> &queryScopLoopup, std::vector<Hits> &fpVec,
+        std::vector<SCOP> *> &scopLoopup, std::vector<Hits> &fpVec,
                               std::vector<std::pair<std::string, double>> results, size_t rocx) {
     double fp_cnt = 0.0;
     double tp_cnt = 0.0;
@@ -342,12 +342,19 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
     for (size_t i = 0; i < results.size(); i++) {
         const std::string rKey = results[i].first;
         const double evalue = results[i].second;
-        if(queryScopLoopup.find(rKey) ==queryScopLoopup.end() )
-            continue;
-        const std::vector<SCOP> * rfamVec = queryScopLoopup[rKey];
+
         bool tp = false;
         bool fp = false;
         bool ignore = false;
+        // if sequence does not have annotations ignore it
+        if (scopLoopup.find(rKey) == scopLoopup.end()) {
+            tp = false;
+            ignore = true;
+            fp = false;
+            goto outer;
+        }
+        const std::vector<SCOP> * rfamVec = scopLoopup[rKey];
+
         for(size_t j = 0; j < rfamVec->size(); j++) {
             for(size_t i = 0; i < qScopIds->size(); i++) {
                 SCOP qScopId = qScopIds->at(i);

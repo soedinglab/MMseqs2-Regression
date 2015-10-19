@@ -96,7 +96,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
                          std::unordered_map<std::string, size_t > &supFamSizeLookup, bool readEval);
 
 EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, std::unordered_map<std::string,
-        std::vector<SCOP> *> &queryScopLoopup, std::vector<Hits> &fpVec,
+        std::vector<SCOP> *> &scopLoopup, std::vector<Hits> &fpVec,
                               std::vector<std::pair<std::string, double>> results, size_t rocx);
 
 void writeRoc5Data(std::string roc5ResultFile,
