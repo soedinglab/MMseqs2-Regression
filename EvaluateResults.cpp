@@ -346,6 +346,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
         bool tp = false;
         bool fp = false;
         bool ignore = false;
+        std::vector<SCOP> * rfamVec;
         // if sequence does not have annotations ignore it
         if (scopLoopup.find(rKey) == scopLoopup.end()) {
             tp = false;
@@ -353,7 +354,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
             fp = false;
             goto outer;
         }
-        const std::vector<SCOP> * rfamVec = scopLoopup[rKey];
+        rfamVec = scopLoopup[rKey];
 
         for(size_t j = 0; j < rfamVec->size(); j++) {
             for(size_t i = 0; i < qScopIds->size(); i++) {
