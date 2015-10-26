@@ -97,10 +97,10 @@ int main(int argc, char ** argv){
     }
 
     std::sort(roc5Vals.begin(), roc5Vals.end(), sortDescByRoc5());
-    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN\n");
+    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\t(TPs\tFP\tResSize\tIGN)\n");
     for(size_t i = 0; i < roc5Vals.size(); i++) {
         Roc5Value roc5Value = roc5Vals[i];
-        printf("%s\t\t%-30.30s\t%.7f\t%5d\t%5d\t%5d\t%5d\t%5d\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
+        printf("%s\t\t%-30.30s\t%.7f\t%5d\t(TP: %5d FP: %5d RES: %5d IGN: %5d)\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }
@@ -373,7 +373,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
             for(size_t i = 0; i < qScopIds->size(); i++) {
                 SCOP qScopId = qScopIds->at(i);
                 const SCOP rScopId = rfamVec->at(j);
-                if (rScopId.superFam.compare(qScopId.superFam) == 0 && rScopId.evalue < TP_EVAL_THRESHOLD) {
+                if (rScopId.superFam.compare(qScopId.superFam) == 0) {
                     tp = true;
                     goto outer;
                 }

@@ -101,7 +101,7 @@ int main(int argc, char ** argv) {
     size_t uniqIds = 0;
     size_t allEntries = 0;
     size_t validDomains = 0;
-    double EVAL_THRESHOLD = 10.0;
+    double EVAL_THRESHOLD = 0.001;
     std::cout <<"Parse csv file" <<std::endl;
     std::vector<std::string> qTokens;
     std::vector<std::string> tTokens;
@@ -165,17 +165,17 @@ int main(int argc, char ** argv) {
         std::string covFam = coverDomain->scop;
         //covSupFam = covSupFam.erase(covSupFam.find_last_of("."), std::string::npos);
         validDomains++;
-        bool hasEvalueLess1E_3=false;
-        for(size_t i = 0; i < domains.size(); i++) {
-            // check if TP is possible
-            if(domains[i]->evalue < 0.001){
-                hasEvalueLess1E_3 = true;
-            }
-        }
-        if(hasEvalueLess1E_3==false){
-            idsToDelete.push_back(it->first);
-            continue;
-        }
+//        bool hasEvalueLess1E_3=false;
+//        for(size_t i = 0; i < domains.size(); i++) {
+//            // check if TP is possible
+//            if(domains[i]->evalue < EVAL_THRESHOLD){
+//                hasEvalueLess1E_3 = true;
+//            }
+//        }
+//        if(hasEvalueLess1E_3==false){
+//            idsToDelete.push_back(it->first);
+//            continue;
+//        }
         for(size_t i = 1; i < domains.size(); i++){
             // domains[i-1] fully covered domains[i]
             // new domain
@@ -197,9 +197,9 @@ int main(int argc, char ** argv) {
         it->second = newDomains;
     }
     //remove
-    for(size_t i = 0; i < idsToDelete.size(); i++){
-        mappingDict.erase(idsToDelete[i]);
-    }
+//    for(size_t i = 0; i < idsToDelete.size(); i++){
+//        mappingDict.erase(idsToDelete[i]);
+//    }
     std::cout << uniqIds -idsToDelete.size() << " uniq sequences of " << validDomains << " domains out of " << allEntries << " will be considered" << std::endl;
     std::cout << "Write file to " << argv[3] << " will be considered" << std::endl;
     for ( it = mappingDict.begin(); it != mappingDict.end(); it++ )
