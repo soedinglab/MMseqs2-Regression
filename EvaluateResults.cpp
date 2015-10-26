@@ -27,6 +27,10 @@ int main(int argc, char ** argv){
     std::string targetFasta=argv[2];
     std::string resultFile=argv[3];
     std::string outputResultFile=argv[4];
+    double resSize = 1000.0;
+    if(argc > 5){
+        resSize = atof(argv[5]);
+    }
     std::unordered_map<std::string, std::vector<SCOP>*> scopLoopup;
     std::cout << "Read query fasta" << std::endl;
     std::unordered_map<std::string, size_t > whatever;
@@ -74,8 +78,8 @@ int main(int argc, char ** argv){
         std::string qFamStr;
         for(size_t i = 0; i < qFams->size(); i++) {
             SCOP qFam = qFams->at(i);
-            qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.superFam], 4000.0);
-            qFamStr.append(qFams->at(i).fam).append(", ");
+            qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.superFam], resSize);
+            qFamStr.append(qFams->at(i).fam).append(",");
         }
         if(qFamSize > 0){
             double roc5val = all_auc / (rocx * qFamSize);
@@ -93,10 +97,10 @@ int main(int argc, char ** argv){
     }
 
     std::sort(roc5Vals.begin(), roc5Vals.end(), sortDescByRoc5());
-    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\t(TPs\tFP\tResSize\tIGN)\n");
+    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN\n");
     for(size_t i = 0; i < roc5Vals.size(); i++) {
         Roc5Value roc5Value = roc5Vals[i];
-        printf("%s\t\t%-30.30s\t%.7f\t%5d\t(TP: %5d FP: %5d RES: %5d IGN: %5d)\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
+        printf("%s\t\t%-30.30s\t%.7f\t%5d\t%5d\t%5d\t%5d\t%5d\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }
@@ -110,23 +114,28 @@ int main(int argc, char ** argv){
             mostQueriesWithSmallEval[allHits[i].query]++;
         }
     }
-    std::cout << "Top high scoring queries:" << std::endl;
+//    std::cout << "Top high scoring queries:" << std::endl;
     std::vector<std::pair<size_t, std::string>> mostQueriesWithSmallEvalVec;
     for (std::map<std::string, size_t >::iterator it = mostQueriesWithSmallEval.begin();
          it != mostQueriesWithSmallEval.end(); it++ ) {
         mostQueriesWithSmallEvalVec.push_back(std::make_pair(it->second, it->first));
     }
-    std::sort(mostQueriesWithSmallEvalVec.begin(), mostQueriesWithSmallEvalVec.end());
-    for (int i = mostQueriesWithSmallEvalVec.size(); i > 0; i--) {
+    //std::sort(mostQueriesWithSmallEvalVec.begin(), mostQueriesWithSmallEvalVec.end());
+/*    for (int i = mostQueriesWithSmallEvalVec.size(); i > 0; i--) {
         std::cout << mostQueriesWithSmallEvalVec[i-1].second << " " << mostQueriesWithSmallEvalVec[i-1].first << std::endl;
     }
-
-    std::cout << "Top 200 FP:" << std::endl;
+*/
+    std::cout << "Top 50 FP:" << std::endl;
     size_t cnt=0;
     for(size_t i = 0; i < allHits.size(); i++) {
         if(allHits[i].status == Hits::FP){
             std::cout << cnt + 1 << ": " << allHits[i].query << " " << allHits[i].target << " " << allHits[i].evalue << std::endl;
-            std::vector<SCOP> * scopTarget =  scopLoopup[allHits[i].target];
+            std::vector<SCOP> * scopTarget;
+            if(scopLoopup.find(allHits[i].target) == scopLoopup.end()){
+                scopTarget = NULL;                
+            }else {
+                scopTarget =  scopLoopup[allHits[i].target];
+            }
             std::vector<SCOP> * scopQuery =  scopLoopup[allHits[i].query];
             std::cout << "Q=";
             for(size_t j = 0; j < scopQuery->size(); j++){
@@ -134,14 +143,18 @@ int main(int argc, char ** argv){
             }
             std::cout << std::endl;
             std::cout << "T=";
-            for(size_t j = 0; j < scopTarget->size(); j++){
-                std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
-            }
+            if(scopTarget == NULL){
+                std::cout << " Inverse";
+            }else {
+           	 for(size_t j = 0; j < scopTarget->size(); j++){
+               		 std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
+           	 }	
+            } 
             std::cout << std::endl;
             std::cout << std::endl;
 
             cnt++;
-            if(cnt==200)
+            if(cnt==50)
                 break;
         }
     }
@@ -350,8 +363,8 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
         // if sequence does not have annotations ignore it
         if (scopLoopup.find(rKey) == scopLoopup.end()) {
             tp = false;
-            ignore = true;
-            fp = false;
+            ignore = false;
+            fp = true;
             goto outer;
         }
         rfamVec = scopLoopup[rKey];
