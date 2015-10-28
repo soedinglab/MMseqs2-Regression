@@ -97,10 +97,10 @@ int main(int argc, char ** argv){
     }
 
     std::sort(roc5Vals.begin(), roc5Vals.end(), sortDescByRoc5());
-    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\t(TPs\tFP\tResSize\tIGN)\n");
+    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN)\n");
     for(size_t i = 0; i < roc5Vals.size(); i++) {
         Roc5Value roc5Value = roc5Vals[i];
-        printf("%s\t\t%-30.30s\t%.7f\t%5d\t(TP: %5d FP: %5d RES: %5d IGN: %5d)\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
+        printf("%s\t\t%-30.30s\t%.7f\t%5d\t%5d\t%5d\t%5d\t%5d\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }
@@ -293,6 +293,8 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
 
     std::regex scopDomainRegex("\\S+\\.\\d+\\.\\d+\\.\\d+");
     std::set<std::string> scopDomains;
+    std::set<std::string> scopSuperFam;
+
 
     while (kseq_read(seq) >= 0) {
         if (seq->name.l == 0) {
@@ -317,6 +319,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
             ++begin;
         }
         int i = 0;
+
         for(std::set<std::string>::iterator it = scopDomains.begin(); it != scopDomains.end(); it++) {
             std::string currScopDomain = *it;
             double eval = (readEval == true) ? strtod(evals[i].c_str(), NULL) : 0.0;
@@ -325,15 +328,17 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
             if (supFamSizeLookup.find(domain.fam) == supFamSizeLookup.end()) {
                 supFamSizeLookup[domain.fam] = 0;
             }
-            // count only possible TP
-            if (eval < TP_EVAL_THRESHOLD){
-                supFamSizeLookup[domain.fam]++;
+
+            supFamSizeLookup[domain.fam]++;
+            if(scopSuperFam.find(domain.superFam) == scopSuperFam.end() ){
                 supFamSizeLookup[domain.superFam]++;
-                supFamSizeLookup[domain.fold]++;
+                scopSuperFam.insert(domain.superFam);
             }
+            supFamSizeLookup[domain.fold]++;
             queryDomainVector->push_back(domain);
             i++;
         }
+        scopSuperFam.clear();
         entries_num++;
         printProgress(entries_num);
 
