@@ -58,7 +58,7 @@ int main(int argc, char ** argv){
         std::string query = seq->name.s;
 //        std::cout << query << std::endl;
         std::vector<SCOP> * qFams = scopLoopup[query];
-        std::vector<std::pair<std::string, double>> resIds = readResultFile(query, resultFile);
+        std::vector<std::pair<std::string, double>> resIds = readResultFile(query, resultFile, resSize);
         EvaluateResult eval = evaluateResult(query, qFams, scopLoopup,
                                              allHits, resIds, rocx);
 //            if(query.compare("d2py5a2") == 0){
@@ -210,11 +210,12 @@ void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pa
     }
 }
 
-void parseM8(std::string query, std::string resFileName, std::vector<std::pair<std::string, double>> &resultVector) {
+void parseM8(std::string query, std::string resFileName, std::vector<std::pair<std::string, double>> &resultVector, double resSize) {
     static bool isReadIn = false;
     static std::map<std::string, std::vector<std::pair<std::string, double>>> resLookup;
     if(isReadIn == false){
         std::cout << "Read in m8 " << resFileName << std::endl;
+        size_t resSizeInt = resSize;
         std::ifstream infile(resFileName);
         std::string line;
         std::regex keyRegex("\\S+");
@@ -233,8 +234,9 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
             }
             std::string evalStr = *tBegin;
             double eval = atof(evalStr.c_str());
-
-            resLookup[key].push_back(std::make_pair(targetkey,eval));
+            if(resLookup[key].size() < resSizeInt){
+                resLookup[key].push_back(std::make_pair(targetkey,eval));
+            }
         }
         infile.close();
         std::map<std::string, std::vector<std::pair<std::string, double>>>::iterator it;
@@ -262,13 +264,13 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
     resultVector.swap(resLookup[query]);
 }
 
-std::vector<std::pair<std::string, double>> readResultFile(std::string query, std::string resFileName) {
+std::vector<std::pair<std::string, double>> readResultFile(std::string query, std::string resFileName, double resSize) {
     std::vector<std::pair<std::string, double>> resultVector;
     std::string extention = resFileName.substr(resFileName.find_last_of(".") + 1);
     if(extention.compare("index") == 0) { // MMSeqs
         parseMMseqs(query, resFileName, resultVector);
     } else if (extention.compare("m8") == 0){
-        parseM8(query, resFileName, resultVector);
+        parseM8(query, resFileName, resultVector, resSize);
     }
     return resultVector;
 }
