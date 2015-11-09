@@ -17,10 +17,8 @@ extern "C" {
 #define MAX_FILENAME_LIST_FILES 4096
 KSEQ_INIT(int, read)
 
-double TP_EVAL_THRESHOLD = 0.001;
 
 int main(int argc, char ** argv){
-    size_t rocx = 5;
     size_t res_cnt = 0;
     //while( true)
     std::string queryFasta=argv[1];
@@ -30,6 +28,11 @@ int main(int argc, char ** argv){
     double resSize = 1000.0;
     if(argc > 5){
         resSize = atof(argv[5]);
+    }
+
+    size_t rocx = 1;
+    if(argc > 6){
+        resSize = atoi(argv[6]);
     }
     std::unordered_map<std::string, std::vector<SCOP>*> scopLoopup;
     std::cout << "Read query fasta" << std::endl;
@@ -43,6 +46,25 @@ int main(int argc, char ** argv){
                         scopSizeLoopup, true);
     std::cout << std::endl;
     std::cout << "Read result fasta " << std::endl;
+
+    std::vector<std::pair<size_t, std::string>> supFam;
+    for (std::unordered_map<std::string, size_t >::iterator it = scopSizeLoopup.begin();
+         it != scopSizeLoopup.end(); it++ ) {
+        size_t n = std::count(it->first.begin(), it->first.end(), '.');
+        if(n == 2) {
+            supFam.push_back(std::make_pair( it->second, it->first));
+        }
+    }
+    std::sort(supFam.begin(), supFam.end());
+    double sum = 0.0;
+    for(size_t i = 0; i < supFam.size(); i++){
+        sum += (double)supFam[i].first;
+//        std::cout << supFam[i].second << "\t" << supFam[i].first << std::endl;
+    }
+    std::cout << "N=" << supFam.size() << " Sum=" << sum << " Avg=" << (sum/ supFam.size());
+    std::cout << " Median=" << supFam[supFam.size()/2].first;
+    std::cout << " 1/4=" << supFam[supFam.size()/4].first;
+    std::cout << " 3.5/4=" << supFam[(supFam.size()/4) * 3.5].first << std::endl;
 
     FILE * fasta_file = fopen(queryFasta.c_str(), "r");
     kseq_t *seq = kseq_init(fileno(fasta_file));
@@ -104,7 +126,6 @@ int main(int argc, char ** argv){
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }
-    std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
     double fpsWithSmallEvalue=0;
     double EVAL_THRESHOLD = 1E-3;
     std::map<std::string, size_t > mostQueriesWithSmallEval;
@@ -132,7 +153,7 @@ int main(int argc, char ** argv){
             std::cout << cnt + 1 << ": " << allHits[i].query << " " << allHits[i].target << " " << allHits[i].evalue << std::endl;
             std::vector<SCOP> * scopTarget;
             if(scopLoopup.find(allHits[i].target) == scopLoopup.end()){
-                scopTarget = NULL;                
+                scopTarget = NULL;
             }else {
                 scopTarget =  scopLoopup[allHits[i].target];
             }
@@ -146,10 +167,10 @@ int main(int argc, char ** argv){
             if(scopTarget == NULL){
                 std::cout << " Inverse";
             }else {
-           	 for(size_t j = 0; j < scopTarget->size(); j++){
-               		 std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
-           	 }	
-            } 
+                for(size_t j = 0; j < scopTarget->size(); j++){
+                    std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
+                }
+            }
             std::cout << std::endl;
             std::cout << std::endl;
 
@@ -158,6 +179,7 @@ int main(int argc, char ** argv){
                 break;
         }
     }
+    writeAnnoatedResultFile(outputResultFile, allHits);
     kseq_destroy(seq);
     std::cout << res_cnt  << " result lists checked." << std::endl;
     std::cout << early_break_cnt << " result lists did not contain 5 FPs." << std::endl;
@@ -166,8 +188,19 @@ int main(int argc, char ** argv){
     std::cout << overall_ignore_cnt << " sequence pairs ignored (different family, same fold)" << std::endl;
 
     writeRoc5Data(outputResultFile, roc5Vals, 0.01);
+    std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
+
     writeRocData(outputResultFile, allHits, 10000);
     return 0;
+}
+
+void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> hits) {
+    std::ofstream outFile;
+    outFile.open (resultFile+".annotated_result");
+    for (size_t i = 0; i < hits.size(); i++) {
+        outFile << hits[i].query << "\t" << hits[i].target << "\t" << hits[i].evalue << "\t" << hits[i].status  << "\n";
+    }
+    outFile.close();
 }
 
 void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pair<std::string,double>> & resultVector) {

@@ -105,4 +105,7 @@ void writeRoc5Data(std::string roc5ResultFile,
 
 void writeRocData(std::string rocFilePath, std::vector<Hits> hits, size_t binSize);
 
+void writeAnnoatedResultFile(std::string basic_string, std::vector<Hits> vector);
+
+
 #endif
