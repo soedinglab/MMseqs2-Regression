@@ -32,7 +32,7 @@ int main(int argc, char ** argv){
 
     size_t rocx = 1;
     if(argc > 6){
-        resSize = atoi(argv[6]);
+        rocx = atoi(argv[6]);
     }
     std::unordered_map<std::string, std::vector<SCOP>*> scopLoopup;
     std::cout << "Read query fasta" << std::endl;
@@ -182,7 +182,7 @@ int main(int argc, char ** argv){
     writeAnnoatedResultFile(outputResultFile, allHits);
     kseq_destroy(seq);
     std::cout << res_cnt  << " result lists checked." << std::endl;
-    std::cout << early_break_cnt << " result lists did not contain 5 FPs." << std::endl;
+    std::cout << early_break_cnt << " result lists did not contain " << rocx << " FPs." << std::endl;
     std::cout << "Results contains " << overall_tp << " TPs and " << overall_fp << " FPs." << std::endl;
     std::cout << "Total FPs " << fpsWithSmallEvalue << " of " << mostQueriesWithSmallEvalVec.size() << " queries have an eval < " << EVAL_THRESHOLD << "." << std::endl;
     std::cout << overall_ignore_cnt << " sequence pairs ignored (different family, same fold)" << std::endl;
