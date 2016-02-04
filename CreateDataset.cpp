@@ -101,7 +101,7 @@ int main(int argc, char ** argv) {
     size_t uniqIds = 0;
     size_t allEntries = 0;
     size_t validDomains = 0;
-    double EVAL_THRESHOLD = 0.001;
+    double EVAL_THRESHOLD = 0.00001;
     std::cout <<"Parse csv file" <<std::endl;
     std::vector<std::string> qTokens;
     std::vector<std::string> tTokens;
@@ -145,7 +145,7 @@ int main(int argc, char ** argv) {
     std::cout << uniqIds << " uniq sequences of " << validDomains << " domains out of " << allEntries << " will be considered" << std::endl;
         std::unordered_map<std::string, std::vector<ScopEntry*>>::iterator it;
     validDomains = 0;
-    std::cout << "Remove covered domains by same superfamily" << std::endl;
+    std::cout << "Remove covered domains by same family" << std::endl;
     std::vector<std::string> idsToDelete;
 
     for ( it = mappingDict.begin(); it != mappingDict.end(); it++ ){

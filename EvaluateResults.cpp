@@ -100,7 +100,7 @@ int main(int argc, char ** argv){
         std::string qFamStr;
         for(size_t i = 0; i < qFams->size(); i++) {
             SCOP qFam = qFams->at(i);
-            qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.superFam], resSize);
+            qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.fam], resSize);
             qFamStr.append(qFams->at(i).fam).append(",");
         }
         if(qFamSize > 0){
@@ -141,11 +141,13 @@ int main(int argc, char ** argv){
          it != mostQueriesWithSmallEval.end(); it++ ) {
         mostQueriesWithSmallEvalVec.push_back(std::make_pair(it->second, it->first));
     }
-    //std::sort(mostQueriesWithSmallEvalVec.begin(), mostQueriesWithSmallEvalVec.end());
+    std::sort(mostQueriesWithSmallEvalVec.begin(), mostQueriesWithSmallEvalVec.end());
 /*    for (int i = mostQueriesWithSmallEvalVec.size(); i > 0; i--) {
         std::cout << mostQueriesWithSmallEvalVec[i-1].second << " " << mostQueriesWithSmallEvalVec[i-1].first << std::endl;
     }
 */
+    std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
+
     std::cout << "Top 50 FP:" << std::endl;
     size_t cnt=0;
     for(size_t i = 0; i < allHits.size(); i++) {
@@ -413,7 +415,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
             for(size_t i = 0; i < qScopIds->size(); i++) {
                 SCOP qScopId = qScopIds->at(i);
                 const SCOP rScopId = rfamVec->at(j);
-                if (rScopId.superFam.compare(qScopId.superFam) == 0) {
+                if (rScopId.fam.compare(qScopId.fam) == 0) {
                     tp = true;
                     goto outer;
                 }
