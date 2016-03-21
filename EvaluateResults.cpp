@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
+#include <iomanip>
 
 extern "C" {
 #include "ffindex.h"
@@ -193,6 +194,8 @@ int main(int argc, char ** argv){
     std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
 
     writeRocData(outputResultFile, allHits, 10000);
+    writeFDRData(outputResultFile, allHits, 1E-100);
+
     return 0;
 }
 
@@ -294,8 +297,8 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
             single.clear();
         }
         isReadIn = true;
-
     }
+
     resultVector.swap(resLookup[query]);
 }
 
@@ -385,7 +388,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
 }
 
 EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, std::unordered_map<std::string,
-        std::vector<SCOP> *> &scopLoopup, std::vector<Hits> &fpVec,
+        std::vector<SCOP> *> &scopLoopup, std::vector<Hits> &allHitsVec,
                               std::vector<std::pair<std::string, double>> results, size_t rocx) {
     double fp_cnt = 0.0;
     double tp_cnt = 0.0;
@@ -452,19 +455,52 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
             if (tp == true)
             {
                 tp_cnt++;
-                fpVec.push_back(Hits(query,rKey, evalue, Hits::TP ));
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::TP ));
             }else if(ignore == true){
                 ignore_cnt++;
-                fpVec.push_back(Hits(query,rKey, evalue, Hits::IGN ));
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::IGN ));
             }else if(fp == true){
                 fp_cnt++;
-                fpVec.push_back(Hits(query,rKey, evalue, Hits::FP ));
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::FP ));
                 auc = auc + tp_cnt;
+            }
+        }else{
+            if (tp == true)
+            {
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::TP ));
+            }else if(ignore == true){
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::IGN ));
+            }else if(fp == true){
+                allHitsVec.push_back(Hits(query, rKey, evalue, Hits::FP ));
             }
         }
     }
     return EvaluateResult(tp_cnt, fp_cnt, ignore_cnt, auc);
 }
+
+
+void writeFDRData(std::string roc5ResultFile,
+                  std::vector<Hits> hits,
+                  double stepSize) {
+    int i = 0;
+    std::ofstream fdrOut;
+    fdrOut.open (roc5ResultFile + ".fdr");
+    float tp = 0;
+    float fp = 0;
+    size_t cnt = 0;
+    for(double step = 0.0; step <= 100000.0; step = stepSize ){
+        while ((i < hits.size()) && (hits[i].evalue <= step)){
+            tp += (hits[i].status == Hits::TP);
+            fp += (hits[i].status == Hits::FP);
+            i++;
+        }
+        fdrOut << std::fixed << std::setprecision(1) << std::scientific  << std::max(0.0, step) << "\t" << std::fixed << std::setprecision(6) << (tp) / (fp + tp) << "\t" << (fp) / (fp + tp) << "\n";
+        cnt++;
+        stepSize *= 10;
+    }
+    fdrOut.close();
+}
+
 
 void writeRoc5Data(std::string roc5ResultFile,
                    std::vector<Roc5Value> roc5Vals,
