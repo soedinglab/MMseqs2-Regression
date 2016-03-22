@@ -194,7 +194,7 @@ int main(int argc, char ** argv){
     std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
 
     writeRocData(outputResultFile, allHits, 10000);
-    writeFDRData(outputResultFile, allHits, 1E-100);
+    writeFDRData(outputResultFile, allHits, 1E-50);
 
     return 0;
 }
@@ -488,7 +488,7 @@ void writeFDRData(std::string roc5ResultFile,
     float tp = 0;
     float fp = 0;
     size_t cnt = 0;
-    for(double step = 0.0; step <= 100000.0; step = stepSize ){
+    for(double step = 0.0; step <= 10000.0; step = stepSize ){
         while ((i < hits.size()) && (hits[i].evalue <= step)){
             tp += (hits[i].status == Hits::TP);
             fp += (hits[i].status == Hits::FP);
@@ -496,7 +496,7 @@ void writeFDRData(std::string roc5ResultFile,
         }
         fdrOut << std::fixed << std::setprecision(1) << std::scientific  << std::max(0.0, step) << "\t" << std::fixed << std::setprecision(6) << (tp) / (fp + tp) << "\t" << (fp) / (fp + tp) << "\n";
         cnt++;
-        stepSize *= 10;
+        stepSize *= 1.5;
     }
     fdrOut.close();
 }
