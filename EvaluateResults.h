@@ -100,11 +100,11 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
                               std::vector<std::pair<std::string, double>> results, size_t rocx);
 
 void writeRoc5Data(std::string roc5ResultFile,
-                   std::vector<Roc5Value> roc5Vals,
+                   std::vector<Roc5Value> & roc5Vals,
                    double stepSize);
 
-void writeRocData(std::string rocFilePath, std::vector<Hits> hits, size_t binSize);
-void writeFDRData(std::string rocFilePath, std::vector<Hits> hits, double stepSize);
-void writeAnnoatedResultFile(std::string basic_string, std::vector<Hits> vector);
+void writeRocData(std::string rocFilePath, std::vector<Hits> & hits, size_t binSize);
+void writeFDRData(std::string rocFilePath, std::vector<Hits> & hits, std::vector<Roc5Value> & rocVal, double stepSize);
+void writeAnnoatedResultFile(std::string basic_string, std::vector<Hits> & vector);
 
 #endif

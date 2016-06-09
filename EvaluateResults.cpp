@@ -194,12 +194,12 @@ int main(int argc, char ** argv){
     std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
 
     writeRocData(outputResultFile, allHits, 10000);
-    writeFDRData(outputResultFile, allHits, 1E-50);
+    writeFDRData(outputResultFile, allHits, roc5Vals, 1E-50);
 
     return 0;
 }
 
-void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> hits) {
+void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> & hits) {
     std::ofstream outFile;
     outFile.open (resultFile+".annotated_result");
     for (size_t i = 0; i < hits.size(); i++) {
@@ -480,7 +480,8 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
 
 
 void writeFDRData(std::string roc5ResultFile,
-                  std::vector<Hits> hits,
+                  std::vector<Hits> & hits,
+                  std::vector<Roc5Value> & rocVal,
                   double stepSize) {
     int i = 0;
     std::ofstream fdrOut;
@@ -488,10 +489,15 @@ void writeFDRData(std::string roc5ResultFile,
     float tp = 0;
     float fp = 0;
     size_t cnt = 0;
-    for(double step = 0.0; step <= 10000.0; step = stepSize ){
-        while ((i < hits.size()) && (hits[i].evalue <= step)){
-            tp += (hits[i].status == Hits::TP);
-            fp += (hits[i].status == Hits::FP);
+    std::map<std::string, size_t > queryToResSize;
+    for(size_t i = 0; i < rocVal.size(); i++){
+        queryToResSize[rocVal[i].query] = rocVal[i].resultSize;
+    }
+
+    for(double step = 0.0; step <= 10000.0; step = stepSize ){ while ((i < hits.size()) && (hits[i].evalue <= step)){
+            float size = static_cast<float>(queryToResSize[hits[i].query]);
+            tp += ((hits[i].status == Hits::TP)/size);
+            fp += ((hits[i].status == Hits::FP)/size);
             i++;
         }
         fdrOut << std::fixed << std::setprecision(1) << std::scientific  << std::max(0.0, step) << "\t" << std::fixed << std::setprecision(6) << (tp) / (fp + tp) << "\t" << (fp) / (fp + tp) << "\n";
@@ -503,7 +509,7 @@ void writeFDRData(std::string roc5ResultFile,
 
 
 void writeRoc5Data(std::string roc5ResultFile,
-                   std::vector<Roc5Value> roc5Vals,
+                   std::vector<Roc5Value> & roc5Vals,
                    double stepSize) {
     int i = 0;
     std::ofstream roc5Out;
@@ -522,12 +528,13 @@ void writeRoc5Data(std::string roc5ResultFile,
     roc5Out.close();
 }
 
-void writeRocData(std::string rocFilePath, std::vector<Hits> hits, size_t binSize) {
+void writeRocData(std::string rocFilePath, std::vector<Hits> & hits, size_t binSize) {
     std::ofstream roc5Out;
     roc5Out.open(rocFilePath + ".roc");
     size_t tp_cnt = 0;
     size_t fp_cnt = 0;
     size_t step_size = hits.size() / binSize;
+    step_size = std::max(step_size, (size_t ) 1 );
     for (size_t i = 0; i < hits.size(); i++) {
         if (hits[i].status == Hits::TP) {
             tp_cnt++;
