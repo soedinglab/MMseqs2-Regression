@@ -486,8 +486,8 @@ void writeFDRData(std::string roc5ResultFile,
     int i = 0;
     std::ofstream fdrOut;
     fdrOut.open (roc5ResultFile + ".fdr");
-    float tp = 0;
-    float fp = 0;
+    double tp = 0;
+    double fp = 0;
     size_t cnt = 0;
     std::map<std::string, size_t > queryToResSize;
     for(size_t i = 0; i < rocVal.size(); i++){
@@ -496,7 +496,7 @@ void writeFDRData(std::string roc5ResultFile,
 
     for(double step = 0.0; step <= 10000.0; step = stepSize ){
         while ((i < hits.size()) && (hits[i].evalue <= step)){
-            float size = static_cast<float>(std::min((size_t )1, queryToResSize[hits[i].query]));
+            double size = static_cast<double>(std::max((size_t )1, queryToResSize[hits[i].query]));
             tp += ((hits[i].status == Hits::TP)/size);
             fp += ((hits[i].status == Hits::FP)/size);
             i++;
