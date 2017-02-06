@@ -1,9 +1,10 @@
 #!/bin/bash -e
-BENCHDIR=${1}
-MMSEQS=${2}
-VERSION=${3}
-RESULTDIR=${4}
-PROFILE=${5:-0}
+BENCHDIR="${1}"
+MMSEQS="${2}"
+EVALUATE="${3}"
+VERSION="${4}"
+RESULTDIR="${5}"
+PROFILE="${6:-0}"
 
 BENCHDB="small-benchmark-db"
 
@@ -37,7 +38,7 @@ if [ $PROFILE -ne 0 ]; then
     mv "$RESULTS/results_aln_sorted.m8" "$RESULTS/results_aln.m8"
 fi
 EVALPREFIX="$BENCHDIR/${BENCHDB}/results-${VERSION}/evaluation"
-$BENCHDIR/${BENCHDB}/evaluate_results "$QUERY" "$DBANNOTATION" "$RESULTS/results_aln.m8" "${EVALPREFIX}_roc5.dat" 4000 1 > "${EVALPREFIX}.log"
+${EVALUATE} "$QUERY" "$DBANNOTATION" "$RESULTS/results_aln.m8" "${EVALPREFIX}_roc5.dat" 4000 1 > "${EVALPREFIX}.log"
 
 AUC=$(grep "^ROC5 AUC:" "${EVALPREFIX}.log" | cut -d" " -f3)
 echo -e "${VERSION}\t${AUC}\t$(printf '%s\t' "${TIMERS[@]}")"
