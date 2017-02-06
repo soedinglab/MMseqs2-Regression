@@ -12,7 +12,8 @@ extern "C" {
 #include "ffindex.h"
 #include "ffutil.h"
 }
-#include <regex>        // regex, sregex_token_iterator
+
+#include "PatternCompiler.h"
 #include "EvaluateResults.h"
 #include "kseq.h"
 #define MAX_FILENAME_LIST_FILES 4096
@@ -235,12 +236,10 @@ void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pa
     if(isReadIn == false){
         std::cout << "Readin of mmseqs results did not work" << std::endl;
     }
-    std::regex keyRegex("\\S+");
+    PatternCompiler keyRegex("[^[:space:]]+");
     ffindex_entry_t * entry = ffindex_bsearch_get_entry(index, (char *) query.c_str());
     char * result = ffindex_get_data_by_entry(data, entry);
-    std::cregex_token_iterator tBegin(result, result + entry->length, keyRegex), tEnd;
-    std::vector<std::string> tmpRes;
-    std::copy(tBegin, tEnd, std::back_inserter(tmpRes));
+    std::vector<std::string> tmpRes = keyRegex.getAllMatches(result, entry->length);
     for(size_t i = 0; i < tmpRes.size(); i+=6){
         if(tmpRes[i].c_str()[0] == '\0')
             break;
@@ -256,21 +255,17 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
         size_t resSizeInt = resSize;
         std::ifstream infile(resFileName);
         std::string line;
-        std::regex keyRegex("\\S+");
+        PatternCompiler keyRegex("[^[:space:]]+");
 
         while (std::getline(infile, line))
         {
-            std::cregex_token_iterator tBegin(line.c_str(), line.c_str() + line.size(), keyRegex), tEnd;
-            std::string key = *tBegin;
+            std::vector<std::string> tmpRes = keyRegex.getAllMatches(line.c_str(), line.size());
+            std::string key = tmpRes[0];
             if(resLookup.find(key)== resLookup.end()) {
                 resLookup[key] = std::vector<std::pair<std::string, double>>();
             }
-            tBegin++;
-            std::string targetkey = *tBegin;
-            for(size_t i = 0; i < 9; i++){
-                tBegin++;
-            }
-            std::string evalStr = *tBegin;
+            std::string targetkey = tmpRes[1];
+            std::string evalStr = tmpRes[10];
             double eval = atof(evalStr.c_str());
             if(resLookup[key].size() < resSizeInt){
                 resLookup[key].push_back(std::make_pair(targetkey,eval));
@@ -331,8 +326,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
     kseq_t *seq = kseq_init(fileno(fasta_file));
     size_t entries_num = 0;
 
-    std::regex scopDomainRegex("\\S+\\.\\d+\\.\\d+\\.\\d+");
-    std::set<std::string> scopDomains;
+    PatternCompiler scopDomainRegex("[a-z]+\\.[0-9]+\\.[0-9]+\\.[0-9]+");
     std::set<std::string> scopSuperFam;
 
 
@@ -348,18 +342,15 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
         std::vector<SCOP> * queryDomainVector = queryScopLookup[currQuery];
         std::vector<std::string> splits = split(std::string(seq->comment.s), "|");
         std::vector<std::string> evals;
-        if(readEval== true){
+        if(readEval == true){
             evals = split(splits[1]," ");
         }
-        std::cregex_token_iterator begin(splits[0].c_str(), splits[0].c_str()+splits[0].size(),
-                                         scopDomainRegex), end;
-        scopDomains.clear();
-        while(begin != end){
-            scopDomains.insert(*begin);
-            ++begin;
-        }
-        int i = 0;
 
+        std::string s(splits[0].c_str(), splits[0].size());
+        std::vector<std::string> domains = scopDomainRegex.getAllMatches(s.c_str(), splits[0].size());
+        std::set<std::string> scopDomains(domains.begin(), domains.end());
+
+        int i = 0;
         for(std::set<std::string>::iterator it = scopDomains.begin(); it != scopDomains.end(); it++) {
             std::string currScopDomain = *it;
             double eval = (readEval == true) ? strtod(evals[i].c_str(), NULL) : 0.0;
@@ -405,6 +396,10 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
         bool fp = false;
         bool ignore = false;
         std::vector<SCOP> * rfamVec;
+
+        PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
+        PatternCompiler ignoreClass("^e\\..*");
+
         // if sequence does not have annotations ignore it
         if (scopLoopup.find(rKey) == scopLoopup.end()) {
             tp = false;
@@ -423,14 +418,12 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
                     goto outer;
                 }
                 if (tp == false) {
-                    std::regex ignore_superfam("^b\\.(67|68|69|70).*");
-                    bool qSuperFamIgnore = std::regex_match(qScopId.fam, ignore_superfam);
-                    bool rSuperFamIgnore = std::regex_match(rScopId.fam, ignore_superfam);
+                    bool qSuperFamIgnore = ignore_superfam.isMatch(qScopId.fam.c_str());
+                    bool rSuperFamIgnore = ignore_superfam.isMatch(rScopId.fam.c_str());
 
 
-                    std::regex ignoreClass("^e\\..*");
-                    bool qFoldIgnore = std::regex_match(qScopId.fam, ignoreClass);
-                    bool rFoldIgnore = std::regex_match(rScopId.fam, ignoreClass);
+                    bool qFoldIgnore = ignoreClass.isMatch(qScopId.fam.c_str());
+                    bool rFoldIgnore = ignoreClass.isMatch(rScopId.fam.c_str());
                     if ((rScopId.fold.compare(qScopId.fold) == 0)
                         || (qSuperFamIgnore && rSuperFamIgnore)
                         || qFoldIgnore

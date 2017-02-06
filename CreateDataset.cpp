@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <algorithm>    // copy
 #include <iterator>     // back_inserter
-#include <regex>        // regex, sregex_token_iterator
 #include <vector>
 #include <iostream>
 #include <unordered_map>
+
+#include "PatternCompiler.h"
 
 extern "C" {
 #include "ffindex.h"
@@ -96,15 +97,13 @@ int main(int argc, char ** argv) {
 
     std::string line;
     std::unordered_map<std::string, std::vector<ScopEntry*>> mappingDict;
-    std::regex digit("\\d+");
+    PatternCompiler digit("[0-9]+");
     //std::getline(csvFile, line); // get header;
     size_t uniqIds = 0;
     size_t allEntries = 0;
     size_t validDomains = 0;
     double EVAL_THRESHOLD = 0.00001;
     std::cout <<"Parse csv file" <<std::endl;
-    std::vector<std::string> qTokens;
-    std::vector<std::string> tTokens;
     while (std::getline(csvFile, line))
     {
         allEntries++;
@@ -131,15 +130,12 @@ int main(int argc, char ** argv) {
                 //mappingDict[hit].reserve(2);
                 uniqIds++;
             }
-            std::cregex_token_iterator qBegin(queryPos, queryPos + strlen(queryPos), digit), qEnd;
-            std::copy(qBegin, qEnd, std::back_inserter(qTokens));
-            std::cregex_token_iterator tBegin(templatePos, templatePos + strlen(templatePos), digit), tEnd;
-            std::copy(tBegin, tEnd, std::back_inserter(tTokens));
+
+            std::vector<std::string> qTokens = digit.getAllMatches(queryPos, 255);
+            std::vector<std::string> tTokens = digit.getAllMatches(queryPos, 255);
             mappingDict[key].push_back(new ScopEntry((const char *)query,(const char *) scop, eval,
-                                                     std::stoi( qTokens[0]), std::stoi( qTokens[1]),
-                                                     std::stoi( tTokens[0]), std::stoi( tTokens[1])));
-            qTokens.clear();
-            tTokens.clear();
+                                                     std::stoi(qTokens[0]), std::stoi(qTokens[1]),
+                                                     std::stoi(tTokens[0]), std::stoi(tTokens[1])));
         }
     }
     std::cout << uniqIds << " uniq sequences of " << validDomains << " domains out of " << allEntries << " will be considered" << std::endl;
