@@ -7,6 +7,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <iomanip>
+#include <algorithm>
 
 extern "C" {
 #include "ffindex.h"
