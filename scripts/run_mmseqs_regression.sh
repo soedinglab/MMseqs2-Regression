@@ -5,6 +5,7 @@ EVALUATE="${3}"
 VERSION="${4}"
 RESULTDIR="${5}"
 PROFILE="${6:-0}"
+NAME="${7:-regression-test}"
 
 BENCHDB="small-benchmark-db"
 
@@ -13,7 +14,7 @@ QUERYDB="$BENCHDIR/${BENCHDB}/query"
 TARGETDB="$BENCHDIR/${BENCHDB}/db2"
 DBANNOTATION="$BENCHDIR/${BENCHDB}/targetannotation.fasta"
 
-RESULTS="${RESULTDIR}/mmseqs-regression-${VERSION}"
+RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
 
 TIMERS=()
 function lap() { TIMERS+=($(date +%s.%N)); }
@@ -37,8 +38,8 @@ if [ $PROFILE -ne 0 ]; then
     sort -k1,1 -k11,11g "$RESULTS/results_aln.m8" > "$RESULTS/results_aln_sorted.m8"
     mv "$RESULTS/results_aln_sorted.m8" "$RESULTS/results_aln.m8"
 fi
-EVALPREFIX="$BENCHDIR/${BENCHDB}/results-${VERSION}/evaluation"
+EVALPREFIX="${RESULTS}/evaluation"
 ${EVALUATE} "$QUERY" "$DBANNOTATION" "$RESULTS/results_aln.m8" "${EVALPREFIX}_roc5.dat" 4000 1 > "${EVALPREFIX}.log"
 
 AUC=$(grep "^ROC5 AUC:" "${EVALPREFIX}.log" | cut -d" " -f3)
-echo -e "${VERSION}\t${AUC}\t$(printf '%s\t' "${TIMERS[@]}")"
+echo -e "${NAME}\t${VERSION}\t${AUC}\t$(printf '%s\t' "${TIMERS[@]}")"
