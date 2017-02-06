@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(MMseqs_benchmark)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES CreateDataset.cpp)
 add_executable(create_dataset ${SOURCE_FILES})
+
 # libs
 add_subdirectory(lib/ffindex)
 include_directories(${PROJECT_SOURCE_DIR}/lib/ffindex/src)
