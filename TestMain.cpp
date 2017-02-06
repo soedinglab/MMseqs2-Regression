@@ -1,5 +1,6 @@
 #include "PatternCompiler.h"
 #include <iostream>
+#include <cstring>
 
 int main(){
     PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
