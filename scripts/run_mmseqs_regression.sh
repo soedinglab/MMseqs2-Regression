@@ -35,7 +35,7 @@ lap
 rm -rf ${TARGETDB}.sk*
 
 if [ $PROFILE -ne 0 ]; then
-    sort -k1,1 -k11,11g "$RESULTS/results_aln.m8" > "$RESULTS/results_aln_sorted.m8"
+    LC_ALL=C sort -k1,1 -k11,11g "$RESULTS/results_aln.m8" > "$RESULTS/results_aln_sorted.m8"
     mv "$RESULTS/results_aln_sorted.m8" "$RESULTS/results_aln.m8"
 fi
 EVALPREFIX="${RESULTS}/evaluation"
