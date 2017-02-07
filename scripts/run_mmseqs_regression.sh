@@ -6,6 +6,7 @@ VERSION="${4}"
 RESULTDIR="${5}"
 PROFILE="${6:-0}"
 NAME="${7:-regression-test}"
+THREADS="${8:-4}"
 
 BENCHDB="small-benchmark-db"
 
@@ -26,9 +27,9 @@ fi
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
 lap
-${MMSEQS} createindex "$TARGETDB" --split 1 1>&2 || exit 125
+${MMSEQS} createindex "$TARGETDB" --threads $THREADS --split 1 1>&2 || exit 125
 lap
-${MMSEQS} search "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" ${SEARCH_PARM} 1>&2 || exit 125 
+${MMSEQS} search "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" --threads $THREADS ${SEARCH_PARM} 1>&2 || exit 125 
 lap
 ${MMSEQS} convertalis "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/results_aln.m8" ${VERBOSE} 1>&2  || exit 125
 lap
