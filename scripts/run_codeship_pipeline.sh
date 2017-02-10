@@ -1,8 +1,7 @@
 #!/bin/bash
-
-BASE_DIR="~/clone/regression_test"
-MMSEQSSSE="~/clone/build/src/mmseqs"
-MMSEQSAVX="~/clone/build_avx2/src/mmseqs"
+BASE_DIR="$HOME/clone/regression_test"
+MMSEQSSSE="$HOME/clone/build/src/mmseqs"
+MMSEQSAVX="$HOME/clone/build_avx2/src/mmseqs"
 
 cd ${BASE_DIR}
 # build the benchmark tools
