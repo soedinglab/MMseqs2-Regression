@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 BASE_DIR="$HOME/clone/regression_test"
 MMSEQSSSE="$HOME/clone/build/src/mmseqs"
 MMSEQSAVX="$HOME/clone/build_avx2/src/mmseqs"
@@ -11,7 +11,7 @@ git submodule init
 git submodule update
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release  ..
-make -j 4 VERBOSE=1
+make -j 4 VERBOSE=0
 cd ..
 cd ..
 
@@ -24,10 +24,10 @@ cp mmseqs-benchmark/data/query.fasta mmseqs-benchmark/data/targetannotation.fast
 # go run it
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_regression.sh"
 EVALUATE="./mmseqs-benchmark/build/evaluate_results"
-${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 SSE_SEARCH 16 > report-${CI_COMMIT_ID}
-${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 0 AVX2_SEARCH 16 >> report-${CI_COMMIT_ID}
-${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
-${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 1 AXX2_PROFILE 16 >> report-${CI_COMMIT_ID}
+time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 SSE_SEARCH 16 > report-${CI_COMMIT_ID}
+time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 0 AVX2_SEARCH 16 >> report-${CI_COMMIT_ID}
+time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
+time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 1 AXX2_PROFILE 16 >> report-${CI_COMMIT_ID}
 
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
