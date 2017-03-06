@@ -5,14 +5,16 @@ PROFILEROC="${3}"
 
 ERROR=0
 while IFS='' read -r line || [[ -n "$line" ]]; do
-    IFS=$"\t" read -r -a values <<< "$string"
+    IFS=$'\t' read -r -a values <<< "$line"
     if [[ "${values[2]}" -eq "0" ]]; then
         TARGET=$SEARCHROC
-    else
+    elif [[ "${values[2]}" -eq "1" ]]; then
         TARGET=$PROFILEROC
+    else
+        continue
     fi
-    GOOD=$(echo "${values[3]}" | awk -v target=$TARGET '{ print ($1 > target) ? "GOOD" : "BAD" }')
-    if [[ "$GOOD" == "GOOD" ]]; then
+    GOOD=$(echo "${values[3]}" | awk -v target=$TARGET '{ print ($1 >= target) ? "GOOD" : "BAD" }')
+    if [[ "$GOOD" != "GOOD" ]]; then
         ERROR=$((ERROR+1))
     fi
 done < "$REPORT"
