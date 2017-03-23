@@ -77,10 +77,10 @@ void parseHitRecordM8(std::string query, std::string resFileName, std::vector<Hi
             std::string targetkey = tmpRes[1];
             std::string evalStr = tmpRes[10];
             //query start and end pos
-            int qStartPos = strtoull(tmpRes[6].c_str(),0,NULL);
-            int qEndPos = strtoull(tmpRes[7].c_str(),0,NULL);
-            int tStartPos = strtoull(tmpRes[8].c_str(),0,NULL);
-            int tEndPos = strtoull(tmpRes[9].c_str(),0,NULL);
+            int qStartPos = strtol(tmpRes[6].c_str(),NULL, 10);
+            int qEndPos = strtol(tmpRes[7].c_str(), NULL, 10);
+            int tStartPos = strtol(tmpRes[8].c_str(), NULL, 10);
+            int tEndPos = strtol(tmpRes[9].c_str(), NULL, 10);
             double eval = atof(evalStr.c_str());
             if(resLookup[key].size() < resSizeInt){
                 resLookup[key].push_back(HitRecord(targetkey,eval, qStartPos, qEndPos, tStartPos, tEndPos));
@@ -130,7 +130,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
     while (kseq_read(seq) >= 0) {
         if (seq->name.l == 0) {
             std::cout << "Fasta entry: " << entries_num << " is invalid." << std::endl;
-            exit;
+            exit(EXIT_FAILURE);
         }
         const std::string currQuery(seq->name.s);
         if(queryScopLookup.find(currQuery)== queryScopLookup.end()) {
@@ -144,8 +144,8 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
             evals = split(splits[1]," ");
         }
         std::vector<std::string> startEndPos = split( splits[4],"-");
-        int alnStart = strtoull(startEndPos[0].c_str(), 0, NULL);
-        int alnEnd = strtoull(startEndPos[1].c_str(), 0, NULL);
+        int alnStart = strtoull(startEndPos[0].c_str(), NULL, 10);
+        int alnEnd = strtoull(startEndPos[1].c_str(), NULL, 10);
 
         std::string s(splits[0].c_str(), splits[0].size());
         std::vector<std::string> domains = scopDomainRegex.getAllMatches(s.c_str(), splits[0].size());
@@ -398,7 +398,7 @@ int main(int argc, char ** argv){
     printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN)\n");
     for(size_t i = 0; i < roc5Vals.size(); i++) {
         Roc5Value roc5Value = roc5Vals[i];
-        printf("%s\t\t%-30.30s\t%.7f\t%5d\t%5d\t%5d\t%5d\t%5d\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
+        printf("%s\t\t%-30.30s\t%.7f\t%5zu\t%5zu\t%5zu\t%5zu\t%5zu\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }

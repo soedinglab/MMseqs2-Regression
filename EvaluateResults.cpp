@@ -17,9 +17,9 @@ extern "C" {
 #include "PatternCompiler.h"
 #include "EvaluateResults.h"
 #include "kseq.h"
+
 #define MAX_FILENAME_LIST_FILES 4096
 KSEQ_INIT(int, read)
-
 
 int main(int argc, char ** argv){
     size_t res_cnt = 0;
@@ -39,23 +39,24 @@ int main(int argc, char ** argv){
     }
     std::unordered_map<std::string, std::vector<SCOP>*> scopLoopup;
     std::cout << "Read query fasta" << std::endl;
-    std::unordered_map<std::string, size_t > whatever;
-    readFamDefFromFasta(queryFasta, scopLoopup,
-                        whatever, false);
+    std::unordered_map<std::string, size_t> whatever;
+    readFamDefFromFasta(queryFasta, scopLoopup, whatever, false);
+    whatever.clear();
+    std::cout << std::endl;
+
     std::cout << "Read target fasta " << std::endl;
     std::unordered_map<std::string, size_t> scopSizeLoopup;
     //std::cout << scopLoopup["d12asa_"]->at(0) << " " << famSizeLoopup[scopLoopup["d1acfa_"]->at(0)] <<std::endl;
-    readFamDefFromFasta(targetFasta, scopLoopup,
-                        scopSizeLoopup, true);
+    readFamDefFromFasta(targetFasta, scopLoopup, scopSizeLoopup, true);
     std::cout << std::endl;
-    std::cout << "Read result fasta " << std::endl;
 
+    std::cout << "Read result fasta " << std::endl;
     std::vector<std::pair<size_t, std::string>> supFam;
-    for (std::unordered_map<std::string, size_t >::iterator it = scopSizeLoopup.begin();
-         it != scopSizeLoopup.end(); it++ ) {
+    for (std::unordered_map<std::string, size_t>::const_iterator it = scopSizeLoopup.cbegin();
+         it != scopSizeLoopup.cend(); ++it) {
         size_t n = std::count(it->first.begin(), it->first.end(), '.');
         if(n == 2) {
-            supFam.push_back(std::make_pair( it->second, it->first));
+            supFam.push_back(std::make_pair(it->second, it->first));
         }
     }
     std::sort(supFam.begin(), supFam.end());
@@ -97,8 +98,10 @@ int main(int argc, char ** argv){
         overall_fp += eval.fp_cnt;
         overall_tp += eval.tp_cnt;
 
-        if(eval.fp_cnt < rocx)
+        if(eval.fp_cnt < rocx) {
             early_break_cnt++;
+        }
+
         double all_auc = eval.auc + (rocx - eval.fp_cnt) * eval.tp_cnt;
 
         double qFamSize = 0.0;
@@ -116,7 +119,8 @@ int main(int argc, char ** argv){
                 std::cout << "Results size: " << resIds.size() << std::endl;
                 std::cout << "TPs: " << eval.tp_cnt << ", FPs: " << eval.fp_cnt  << std::endl;
             }else{
-                roc5Vals.push_back(Roc5Value(query, qFamStr, qFamSize, roc5val, eval.tp_cnt, eval.fp_cnt, eval.ignore_cnt, resIds.size()));
+                roc5Vals.push_back(Roc5Value(query, qFamStr, qFamSize, roc5val,
+                                             eval.tp_cnt, eval.fp_cnt, eval.ignore_cnt, resIds.size()));
             }
         }else {
             std::cout << "Fam = " << qFamStr << " for query " << query << ", # family members: " << qFamSize << std::endl;
@@ -124,10 +128,11 @@ int main(int argc, char ** argv){
     }
 
     std::sort(roc5Vals.begin(), roc5Vals.end(), sortDescByRoc5());
-    printf( "Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN)\n");
+
+    printf("Query\t\tFam\t\t\t\tRoc5\tFamSize\tTPs\tFP\tResSize\tIGN)\n");
     for(size_t i = 0; i < roc5Vals.size(); i++) {
         Roc5Value roc5Value = roc5Vals[i];
-        printf("%s\t\t%-30.30s\t%.7f\t%5d\t%5d\t%5d\t%5d\t%5d\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
+        printf("%s\t\t%-30.30s\t%.7f\t%5zu\t%5zu\t%5zu\t%5zu\t%5zu\n", roc5Value.query.c_str(), roc5Value.qFams.c_str(),
                roc5Value.roc5val, roc5Value.qFamSize, roc5Value.tp_cnt, roc5Value.fp_cnt,
                roc5Value.resultSize, roc5Value.ignore_cnt);
     }
@@ -182,30 +187,35 @@ int main(int argc, char ** argv){
             std::cout << std::endl;
 
             cnt++;
-            if(cnt==50)
+            if(cnt==50) {
                 break;
+            }
         }
     }
-    writeAnnoatedResultFile(outputResultFile, allHits);
     kseq_destroy(seq);
-    std::cout << res_cnt  << " result lists checked." << std::endl;
+    fclose(fasta_file);
+
+    writeAnnoatedResultFile(outputResultFile, allHits);
+
+//    size_t res_cnt = 0;
+//    std::cout << res_cnt  << " result lists checked." << std::endl;
     std::cout << early_break_cnt << " result lists did not contain " << rocx << " FPs." << std::endl;
     std::cout << "Results contains " << overall_tp << " TPs and " << overall_fp << " FPs." << std::endl;
     std::cout << "Total FPs " << fpsWithSmallEvalue << " of " << mostQueriesWithSmallEvalVec.size() << " queries have an eval < " << EVAL_THRESHOLD << "." << std::endl;
     std::cout << overall_ignore_cnt << " sequence pairs ignored (different family, same fold)" << std::endl;
 
     writeRoc5Data(outputResultFile, roc5Vals, 0.01);
-    std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
 
+    std::sort(allHits.begin(), allHits.end(), sortFalsePositvesByEval());
     writeRocData(outputResultFile, allHits, 10000);
     writeFDRData(outputResultFile, allHits, roc5Vals, 1E-50);
     writeEvalueData(outputResultFile, allHits, roc5Vals, queryCount, 1E-50);
-    return 0;
+
+    return EXIT_SUCCESS;
 }
 
 void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> & hits) {
-    std::ofstream outFile;
-    outFile.open (resultFile+".annotated_result");
+    std::ofstream outFile(resultFile + ".annotated_result");
     for (size_t i = 0; i < hits.size(); i++) {
         outFile << hits[i].query << "\t" << hits[i].target << "\t" << hits[i].evalue << "\t" << hits[i].status  << "\n";
     }
@@ -236,16 +246,19 @@ void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pa
         index = ffindex_index_parse(indexFile, cnt);
         isReadIn = true;
     }
+
     if(isReadIn == false){
         std::cout << "Readin of mmseqs results did not work" << std::endl;
     }
+
     PatternCompiler keyRegex("[^[:space:]]+");
     ffindex_entry_t * entry = ffindex_bsearch_get_entry(index, (char *) query.c_str());
     char * result = ffindex_get_data_by_entry(data, entry);
     std::vector<std::string> tmpRes = keyRegex.getAllMatches(result, entry->length);
     for(size_t i = 0; i < tmpRes.size(); i+=6){
-        if(tmpRes[i].c_str()[0] == '\0')
+        if(tmpRes[i].c_str()[0] == '\0') {
             break;
+        }
         resultVector.push_back(std::make_pair(tmpRes[i], atof(tmpRes[i+5].c_str())));
     }
 }
@@ -302,10 +315,10 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
 
 std::vector<std::pair<std::string, double>> readResultFile(std::string query, std::string resFileName, double resSize) {
     std::vector<std::pair<std::string, double>> resultVector;
-    std::string extention = resFileName.substr(resFileName.find_last_of(".") + 1);
-    if(extention.compare("index") == 0) { // MMSeqs
+    std::string extension = resFileName.substr(resFileName.find_last_of(".") + 1);
+    if(extension.compare("index") == 0) { // MMSeqs
         parseMMseqs(query, resFileName, resultVector);
-    } else if (extention.compare("m8") == 0){
+    } else if (extension.compare("m8") == 0){
         parseM8(query, resFileName, resultVector, resSize);
     }
     return resultVector;
@@ -325,24 +338,26 @@ void printProgress(int id){
 
 void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string, std::vector<SCOP> *> &queryScopLookup,
                          std::unordered_map<std::string, size_t > &supFamSizeLookup, bool readEval) {
-    FILE * fasta_file = fopen(fasta_path.c_str(), "r");
-    kseq_t *seq = kseq_init(fileno(fasta_file));
     size_t entries_num = 0;
 
     PatternCompiler scopDomainRegex("[a-z]+\\.[0-9]+\\.[0-9]+\\.[0-9]+");
     std::set<std::string> scopSuperFam;
 
-
+    FILE * fasta_file = fopen(fasta_path.c_str(), "r");
+    kseq_t *seq = kseq_init(fileno(fasta_file));
     while (kseq_read(seq) >= 0) {
         if (seq->name.l == 0) {
             std::cout << "Fasta entry: " << entries_num << " is invalid." << std::endl;
-            exit;
+            exit(EXIT_FAILURE);
         }
+
         const std::string currQuery(seq->name.s);
-        if(queryScopLookup.find(currQuery)== queryScopLookup.end()) {
+
+        if(queryScopLookup.find(currQuery) == queryScopLookup.end()) {
             queryScopLookup[currQuery] = new std::vector<SCOP>();
         }
         std::vector<SCOP> * queryDomainVector = queryScopLookup[currQuery];
+
         std::vector<std::string> splits = split(std::string(seq->comment.s), "|");
         std::vector<std::string> evals;
         if(readEval == true){
@@ -359,26 +374,26 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
             double eval = (readEval == true) ? strtod(evals[i].c_str(), NULL) : 0.0;
             // increase the scop domain count
             SCOP domain = SCOP(currScopDomain, eval);
-            if (supFamSizeLookup.find(domain.fam) == supFamSizeLookup.end()) {
-                supFamSizeLookup[domain.fam] = 0;
-            }
-
             supFamSizeLookup[domain.fam]++;
-            if(scopSuperFam.find(domain.superFam) == scopSuperFam.end() ){
+
+            // count the superfamily only once per protein, to remove a possible repeat bias
+            if (scopSuperFam.find(domain.superFam) == scopSuperFam.end()){
                 supFamSizeLookup[domain.superFam]++;
                 scopSuperFam.insert(domain.superFam);
             }
+
             supFamSizeLookup[domain.fold]++;
             queryDomainVector->push_back(domain);
             i++;
         }
         scopSuperFam.clear();
+
         entries_num++;
         printProgress(entries_num);
 
     }
     kseq_destroy(seq);
-
+    fclose(fasta_file);
 }
 
 EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, std::unordered_map<std::string,
@@ -403,7 +418,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
         PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
         PatternCompiler ignoreClass("^e\\..*");
 
-        // if sequence does not have annotations ignore it
+        // if sequence does not have annotations it is a FP
         if (scopLoopup.find(rKey) == scopLoopup.end()) {
             tp = false;
             ignore = false;
@@ -446,27 +461,24 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
 //        }
         // counter for ROC5 values
 
-        if (fp_cnt < rocx)
-        {
-            if (tp == true)
-            {
+        if (fp_cnt < rocx) {
+            if (tp == true) {
                 tp_cnt++;
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::TP ));
-            }else if(ignore == true){
+            } else if (ignore == true) {
                 ignore_cnt++;
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::IGN ));
-            }else if(fp == true){
+            } else if(fp == true){
                 fp_cnt++;
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::FP ));
                 auc = auc + tp_cnt;
             }
-        }else{
-            if (tp == true)
-            {
+        } else {
+            if (tp == true) {
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::TP ));
-            }else if(ignore == true){
+            } else if(ignore == true) {
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::IGN ));
-            }else if(fp == true){
+            } else if(fp == true) {
                 allHitsVec.push_back(Hits(query, rKey, evalue, Hits::FP ));
             }
         }
