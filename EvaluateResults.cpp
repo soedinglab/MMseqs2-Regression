@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <iomanip>
 #include <algorithm>
+#include <getopt.h>
 
 extern "C" {
 #include "ffindex.h"
@@ -22,21 +23,61 @@ extern "C" {
 KSEQ_INIT(int, read)
 
 int main(int argc, char ** argv){
-    size_t res_cnt = 0;
-    //while( true)
-    std::string queryFasta=argv[1];
-    std::string targetFasta=argv[2];
-    std::string resultFile=argv[3];
-    std::string outputResultFile=argv[4];
-    double resSize = 1000.0;
-    if(argc > 5){
-        resSize = atof(argv[5]);
+    const char* short_options = "x:r:";
+    static struct option long_options[] = {
+        {"res-size", required_argument, NULL, 'r'},
+        {"rocx", required_argument, NULL, 'x'},
+        {NULL, 0, NULL, 0}
+    };
+
+    const double defaultResSize = 1000.0;
+    double resSize = defaultResSize;
+    const size_t defaultRocX = 1;
+    size_t rocx = defaultRocX;
+    while (1) {
+        int option_index = 0;
+
+        int opt;
+        if ((opt = getopt_long(argc, argv, short_options, long_options, &option_index)) == -1) {
+            break;
+        }
+
+        switch (opt) {
+            case 'r':
+                resSize = strtod(optarg, NULL);
+                break;
+            case 'x':
+                rocx = strtoull(optarg, NULL, 10);
+                break;
+            default:
+                break;
+        }
     }
 
-    size_t rocx = 1;
-    if(argc > 6){
-        rocx = atoi(argv[6]);
+    const int remaining_arguments = argc - optind;
+    if (remaining_arguments < 4) {
+        std::cerr << "Please provide input and output files." << std::endl;
+        return EXIT_FAILURE;
     }
+
+    std::string queryFasta(argv[optind++]);
+    std::string targetFasta(argv[optind++]);
+    std::string resultFile(argv[optind++]);
+    std::string outputResultFile(argv[optind++]);
+
+    // legacy parameters, use new parameters
+    if (remaining_arguments >= 5 && resSize == defaultResSize) {
+        std::cerr << "Please port the script to new parameters." << std::endl;
+        resSize = strtod(argv[optind++], NULL);
+
+        if (remaining_arguments == 6 && rocx == defaultRocX) {
+            rocx = strtoull(argv[optind++], NULL, 10);
+        } else {
+            std::cerr << "Too many parameters!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
     std::unordered_map<std::string, std::vector<SCOP>*> scopLoopup;
     std::cout << "Read query fasta" << std::endl;
     std::unordered_map<std::string, size_t> whatever;
