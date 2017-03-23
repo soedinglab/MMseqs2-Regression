@@ -79,8 +79,10 @@ int main(int argc, char ** argv){
     std::vector<Roc5Value> roc5Vals;
     std::vector<Hits> allHits;
     // iterate over all queries
+    size_t queryCount = 0;
     while (kseq_read(seq) >= 0) {
         std::string query = seq->name.s;
+        queryCount++;
 //        std::cout << query << std::endl;
         std::vector<SCOP> * qFams = scopLoopup[query];
         std::vector<std::pair<std::string, double>> resIds = readResultFile(query, resultFile, resSize);
@@ -197,7 +199,7 @@ int main(int argc, char ** argv){
 
     writeRocData(outputResultFile, allHits, 10000);
     writeFDRData(outputResultFile, allHits, roc5Vals, 1E-50);
-
+    writeEvalueData(outputResultFile, allHits, roc5Vals, queryCount, 1E-50);
     return 0;
 }
 
@@ -501,6 +503,35 @@ void writeFDRData(std::string roc5ResultFile,
     }
     fdrOut.close();
 }
+
+void writeEvalueData(std::string roc5ResultFile,
+                  std::vector<Hits> & hits,
+                  std::vector<Roc5Value> & rocVal,
+                  double queryCount,
+                  double stepSize) {
+    int i = 0;
+    std::ofstream fdrOut;
+    fdrOut.open (roc5ResultFile + ".eval");
+    double fp = 0;
+    size_t cnt = 0;
+    std::map<std::string, size_t > queryToResSize;
+    for(size_t i = 0; i < rocVal.size(); i++){
+        queryToResSize[rocVal[i].query] = rocVal[i].resultSize;
+    }
+
+    for(double step = 0.0; step <= 10000.0; step = stepSize ){
+        while ((i < hits.size()) && (hits[i].evalue <= step)){
+            double size = static_cast<double>(std::max((size_t )1, queryToResSize[hits[i].query]));
+            fp += ((hits[i].status == Hits::FP)/size);
+            i++;
+        }
+        fdrOut << std::fixed << std::setprecision(1) << std::scientific  << std::max(0.0, step) << "\t" << std::fixed << std::setprecision(6) << std::max(0.0, step) * queryCount << "\t" << fp << "\n";
+        cnt++;
+        stepSize *= 1.5;
+    }
+    fdrOut.close();
+}
+
 
 
 void writeRoc5Data(std::string roc5ResultFile,

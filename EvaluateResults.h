@@ -105,6 +105,7 @@ void writeRoc5Data(std::string roc5ResultFile,
 
 void writeRocData(std::string rocFilePath, std::vector<Hits> & hits, size_t binSize);
 void writeFDRData(std::string rocFilePath, std::vector<Hits> & hits, std::vector<Roc5Value> & rocVal, double stepSize);
+void writeEvalueData(std::string rocFilePath, std::vector<Hits> & hits, std::vector<Roc5Value> & rocVal, double queryCount, double stepSize);
 void writeAnnoatedResultFile(std::string basic_string, std::vector<Hits> & vector);
 
 #endif
