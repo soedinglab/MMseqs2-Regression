@@ -521,8 +521,7 @@ void writeEvalueData(std::string roc5ResultFile,
 
     for(double step = 0.0; step <= 10000.0; step = stepSize ){
         while ((i < hits.size()) && (hits[i].evalue <= step)){
-            double size = static_cast<double>(std::max((size_t )1, queryToResSize[hits[i].query]));
-            fp += ((hits[i].status == Hits::FP)/size);
+            fp += hits[i].status == Hits::FP;
             i++;
         }
         fdrOut << std::fixed << std::setprecision(1) << std::scientific  << std::max(0.0, step) << "\t" << std::fixed << std::setprecision(6) << std::max(0.0, step) * queryCount << "\t" << fp << "\n";
