@@ -23,10 +23,12 @@ extern "C" {
 KSEQ_INIT(int, read)
 
 int main(int argc, char ** argv){
-    const char* short_options = "x:r:";
+    const char* short_options = "isx:r:";
     static struct option long_options[] = {
         {"res-size", required_argument, NULL, 'r'},
         {"rocx", required_argument, NULL, 'x'},
+        {"super-fam", no_argument, NULL, 's'},
+        {"ignore-fp", no_argument, NULL, 'i'},
         {NULL, 0, NULL, 0}
     };
 
@@ -34,6 +36,8 @@ int main(int argc, char ** argv){
     double resSize = defaultResSize;
     const size_t defaultRocX = 1;
     size_t rocx = defaultRocX;
+    bool superFam = false;
+    bool ignoreFP = false;
     while (1) {
         int option_index = 0;
 
@@ -48,6 +52,12 @@ int main(int argc, char ** argv){
                 break;
             case 'x':
                 rocx = strtoull(optarg, NULL, 10);
+                break;
+            case 'k':
+                superFam = true;
+                break;
+            case 'i':
+                ignoreFP = true;
                 break;
             default:
                 break;
@@ -128,8 +138,7 @@ int main(int argc, char ** argv){
 //        std::cout << query << std::endl;
         std::vector<SCOP> * qFams = scopLoopup[query];
         std::vector<std::pair<std::string, double>> resIds = readResultFile(query, resultFile, resSize);
-        EvaluateResult eval = evaluateResult(query, qFams, scopLoopup,
-                                             allHits, resIds, rocx);
+        EvaluateResult eval = evaluateResult(query, qFams, scopLoopup, allHits, resIds, rocx, superFam, ignoreFP);
 //            if(query.compare("d2py5a2") == 0){
 //                for(size_t j = 0; j < resIds.size(); j++){
 //                    std::cout << resIds[j] << " " << scopLoopup[resIds[j]]->at(0) << std::endl;
@@ -149,8 +158,13 @@ int main(int argc, char ** argv){
         std::string qFamStr;
         for(size_t i = 0; i < qFams->size(); i++) {
             SCOP qFam = qFams->at(i);
-            qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.fam], resSize);
-            qFamStr.append(qFams->at(i).fam).append(",");
+            if (superFam) {
+                qFamSize = std::min(qFamSize + (scopSizeLoopup[qFam.superFam] - scopSizeLoopup[qFam.fam]), resSize);
+                qFamStr.append(qFams->at(i).superFam).append(",");
+            } else {
+                qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.fam], resSize);
+                qFamStr.append(qFams->at(i).fam).append(",");
+            }
         }
         if(qFamSize > 0){
             double roc5val = all_auc / (rocx * qFamSize);
@@ -213,7 +227,11 @@ int main(int argc, char ** argv){
             std::vector<SCOP> * scopQuery =  scopLoopup[allHits[i].query];
             std::cout << "Q=";
             for(size_t j = 0; j < scopQuery->size(); j++){
-                std::cout << " " << scopQuery->at(j).fam << "(" << scopQuery->at(j).evalue << ")";
+                if (superFam) {
+                    std::cout << " " << scopQuery->at(j).superFam << "(" << scopQuery->at(j).evalue << ")";
+                } else {
+                    std::cout << " " << scopQuery->at(j).fam << "(" << scopQuery->at(j).evalue << ")";
+                }
             }
             std::cout << std::endl;
             std::cout << "T=";
@@ -221,7 +239,11 @@ int main(int argc, char ** argv){
                 std::cout << " Inverse";
             }else {
                 for(size_t j = 0; j < scopTarget->size(); j++){
-                    std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
+                    if (superFam) {
+                        std::cout << " " << scopTarget->at(j).superFam << "(" << scopTarget->at(j).evalue << ")";
+                    } else {
+                        std::cout << " " << scopTarget->at(j).fam << "(" << scopTarget->at(j).evalue << ")";
+                    }
                 }
             }
             std::cout << std::endl;
@@ -437,9 +459,10 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
     fclose(fasta_file);
 }
 
-EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, std::unordered_map<std::string,
-        std::vector<SCOP> *> &scopLoopup, std::vector<Hits> &allHitsVec,
-                              std::vector<std::pair<std::string, double>> results, size_t rocx) {
+EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
+                              std::unordered_map<std::string, std::vector<SCOP> *> &scopLoopup,
+                              std::vector<Hits> &allHitsVec, std::vector<std::pair<std::string, double>> results,
+                              size_t rocx, bool superFam, bool ignoreFP) {
     double fp_cnt = 0.0;
     double tp_cnt = 0.0;
     double ignore_cnt = 0.0;
@@ -472,24 +495,26 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds, st
             for(size_t i = 0; i < qScopIds->size(); i++) {
                 SCOP qScopId = qScopIds->at(i);
                 const SCOP rScopId = rfamVec->at(j);
-                if (rScopId.fam.compare(qScopId.fam) == 0) {
-                    tp = true;
-                    goto outer;
+                tp = rScopId.fam.compare(qScopId.fam) == 0;
+                if (superFam) {
+                    // not family but same super family
+                    tp = !tp && (rScopId.superFam.compare(qScopId.superFam) == 0);
                 }
-                if (tp == false) {
+                if (tp) {
+                    goto outer;
+                } else {
                     bool qSuperFamIgnore = ignore_superfam.isMatch(qScopId.fam.c_str());
                     bool rSuperFamIgnore = ignore_superfam.isMatch(rScopId.fam.c_str());
 
-
                     bool qFoldIgnore = ignoreClass.isMatch(qScopId.fam.c_str());
                     bool rFoldIgnore = ignoreClass.isMatch(rScopId.fam.c_str());
+
                     if ((rScopId.fold.compare(qScopId.fold) == 0)
                         || (qSuperFamIgnore && rSuperFamIgnore)
                         || qFoldIgnore
                         || rFoldIgnore) {
                         ignore = true;
-//                        goto outer;
-                    } else {
+                    } else if (ignoreFP == false) {
                         fp = true;
                     }
                 }
