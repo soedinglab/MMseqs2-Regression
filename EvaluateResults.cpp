@@ -53,7 +53,7 @@ int main(int argc, char ** argv){
             case 'x':
                 rocx = strtoull(optarg, NULL, 10);
                 break;
-            case 'k':
+            case 's':
                 superFam = true;
                 break;
             case 'i':
