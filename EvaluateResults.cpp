@@ -468,6 +468,9 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
     double ignore_cnt = 0.0;
     double auc = 0.0;
 
+    PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
+    PatternCompiler ignoreClass("^e\\..*");
+
 //    std::string qSupFam = qFam;
 //    qSupFam = qSupFam.erase(qSupFam.find_last_of("."), std::string::npos);
     for (size_t i = 0; i < results.size(); i++) {
@@ -478,9 +481,6 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
         bool fp = false;
         bool ignore = false;
         std::vector<SCOP> * rfamVec;
-
-        PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
-        PatternCompiler ignoreClass("^e\\..*");
 
         // if sequence does not have annotations it is a FP
         if (scopLoopup.find(rKey) == scopLoopup.end()) {
