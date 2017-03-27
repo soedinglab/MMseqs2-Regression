@@ -172,7 +172,7 @@ int main(int argc, char ** argv){
                 std::cout << "ROC5 = " << roc5val << " for query " << query << ", # family members: " <<
                 qFamSize << std::endl;
                 std::cout << "Results size: " << resIds.size() << std::endl;
-                std::cout << "TPs: " << eval.tp_cnt << ", FPs: " << eval.fp_cnt  << std::endl;
+                std::cout << "TPs: " << eval.tp_cnt << ", FPs: " << eval.fp_cnt << ", AUC: " << eval.auc  << std::endl;
             }else{
                 roc5Vals.push_back(Roc5Value(query, qFamStr, qFamSize, roc5val,
                                              eval.tp_cnt, eval.fp_cnt, eval.ignore_cnt, resIds.size()));
@@ -432,8 +432,8 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
         std::set<std::string> scopDomains(domains.begin(), domains.end());
 
         int i = 0;
-        for(std::set<std::string>::iterator it = scopDomains.begin(); it != scopDomains.end(); it++) {
-            std::string currScopDomain = *it;
+        for(std::set<std::string>::const_iterator it = scopDomains.cbegin(); it != scopDomains.cend(); it++) {
+            const std::string &currScopDomain = *it;
             double eval = (readEval == true) ? strtod(evals[i].c_str(), NULL) : 0.0;
             // increase the scop domain count
             SCOP domain = SCOP(currScopDomain, eval);
