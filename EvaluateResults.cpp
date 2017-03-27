@@ -159,7 +159,7 @@ int main(int argc, char ** argv){
         for(size_t i = 0; i < qFams->size(); i++) {
             SCOP qFam = qFams->at(i);
             if (superFam) {
-                qFamSize = std::min(qFamSize + (scopSizeLoopup[qFam.superFam] - scopSizeLoopup[qFam.fam]), resSize);
+                qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.superFam], resSize);
                 qFamStr.append(qFams->at(i).superFam).append(",");
             } else {
                 qFamSize = std::min(qFamSize + scopSizeLoopup[qFam.fam], resSize);
@@ -169,8 +169,8 @@ int main(int argc, char ** argv){
         if(qFamSize > 0){
             double roc5val = all_auc / (rocx * qFamSize);
             if (roc5val > 1.0){
-                std::cout << "ROC5 = " << roc5val << " for query " << query << ", # family members: " <<
-                qFamSize << std::endl;
+                std::cout << "ROC5 = " << roc5val << " for query " << query << std::endl;
+                std::cout << "Fam = " << qFamStr << " # family members: " << qFamSize << std::endl;
                 std::cout << "Results size: " << resIds.size() << std::endl;
                 std::cout << "TPs: " << eval.tp_cnt << ", FPs: " << eval.fp_cnt << ", AUC: " << eval.auc  << std::endl;
             }else{
@@ -474,7 +474,7 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
 //    std::string qSupFam = qFam;
 //    qSupFam = qSupFam.erase(qSupFam.find_last_of("."), std::string::npos);
     for (size_t i = 0; i < results.size(); i++) {
-        const std::string rKey = results[i].first;
+        const std::string &rKey = results[i].first;
         const double evalue = results[i].second;
 
         bool tp = false;
@@ -493,12 +493,13 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
 
         for(size_t j = 0; j < rfamVec->size(); j++) {
             for(size_t i = 0; i < qScopIds->size(); i++) {
-                SCOP qScopId = qScopIds->at(i);
-                const SCOP rScopId = rfamVec->at(j);
-                tp = rScopId.fam.compare(qScopId.fam) == 0;
+                const SCOP &qScopId = qScopIds->at(i);
+                const SCOP &rScopId = rfamVec->at(j);
                 if (superFam) {
                     // not family but same super family
-                    tp = !tp && (rScopId.superFam.compare(qScopId.superFam) == 0);
+                    tp = (rScopId.fam.compare(qScopId.fam) != 0) && (rScopId.superFam.compare(qScopId.superFam) == 0);
+                } else {
+                    tp = rScopId.fam.compare(qScopId.fam) == 0;
                 }
                 if (tp) {
                     goto outer;
