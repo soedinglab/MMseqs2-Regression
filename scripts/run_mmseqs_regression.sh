@@ -59,5 +59,5 @@ fi
 
 ${EVALUATE} "$QUERY" "$DBANNOTATION" "$RESULTS/results_aln.m8" "${EVALPREFIX}_roc5.dat" 4000 1 > "${EVALPREFIX}.log"
 AUC=$(grep "^ROC5 AUC:" "${EVALPREFIX}.log" | cut -d" " -f3)
-cat "${EVALPREFIX}.log"
+cat "${EVALPREFIX}.log" >&2
 echo -e "${NAME}\t${VERSION}\t${PROFILE}\t${AUC}\t$(printf '%s\t' "${TIMERS[@]}")"
