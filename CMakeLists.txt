@@ -28,3 +28,9 @@ add_executable(evaluate_pos_results EvaluateResultsPos.cpp EvaluateResults.h)
 target_link_libraries(evaluate_pos_results ffindex)
 
 add_executable(test_main TestMain.cpp)
+
+install(TARGETS 
+    evaluate_results
+    evaluate_pos_results
+    test_main
+    DESTINATION bin)
