@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -ex
 BASE_DIR="$HOME/clone/regression_test"
 MMSEQSSSE="$HOME/clone/build/src/mmseqs"
 MMSEQSAVX="$HOME/clone/build_avx2/src/mmseqs"
