@@ -3,6 +3,10 @@ REPORT="${1}"
 SEARCHROC="${2}"
 PROFILEROC="${3}"
 
+if [[ ! -s "${REPORT}" ]]; then
+    exit 1
+fi
+
 ERROR=0
 while IFS='' read -r line || [[ -n "$line" ]]; do
     IFS=$'\t' read -r -a values <<< "$line"
