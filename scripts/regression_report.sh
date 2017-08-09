@@ -24,7 +24,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     elif [[ "${values[2]}" -eq "1" ]]; then
         TARGET=$PROFILEROC
         TEST=AWKLEQ
-    elif [[ "${values[2]}" -eq "7" ]]; then
+    elif [[ "${values[2]}" -eq "9" ]]; then
         TARGET=$DBPROFROC
         TEST=AWKLEQ
     elif [[ "${values[2]}" -eq "3" ]]; then
