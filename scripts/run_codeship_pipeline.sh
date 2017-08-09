@@ -28,9 +28,18 @@ time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 SSE_SEARCH 
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 0 AVX2_SEARCH 16 >> report-${CI_COMMIT_ID}
 time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 1 AXX2_PROFILE 16 >> report-${CI_COMMIT_ID}
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_dbprofile_regression.sh"
+time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} dbprofile-results DBPROFILE 16 >> report-${CI_COMMIT_ID}
+
+cp mmseqs-benchmark/data/clu.fasta mmseqs-benchmark/data/clu-tcov.fasta.gz small-benchmark-db
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_clu_regression.sh"
+time ${RUNEVAL} small-benchmark-db/clu.fasta ${MMSEQSAVX} CLU ${CI_COMMIT_ID} clu-results 0 "--cascaded --min-seq-id 0.3 -s 2 --threads 16" \
+    >> report-${CI_COMMIT_ID}
+time ${RUNEVAL} small-benchmark-db/clu-tcov.fasta.gz ${MMSEQSAVX} LINCLU ${CI_COMMIT_ID} linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.90 --threads 16" \
+    >> report-${CI_COMMIT_ID}
 
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
 curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
-./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.331
+./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.331 0.22 12770 1880
 exit $?

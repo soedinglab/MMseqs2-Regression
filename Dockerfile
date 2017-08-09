@@ -14,7 +14,7 @@ RUN ninja && ninja install
 FROM soedinglab/mmseqs2 AS mmseqs
 MAINTAINER Milot Mirdita <milot@mirdita.de>
 
-RUN apk add --no-cache coreutils
+RUN apk add --no-cache coreutils gawk
 
 COPY --from=benchmark-builder /opt/mmseqs-benchmark/build/bin/evaluate_results /usr/local/bin/evaluate_results
 COPY --from=benchmark-builder /opt/mmseqs-benchmark/build/bin/evaluate_pos_results /usr/local/bin/evaluate_pos_results
@@ -23,12 +23,25 @@ COPY --from=benchmark-builder /opt/mmseqs-benchmark/build/bin/test_main /usr/loc
 WORKDIR small-benchmark-db
 ADD data/query.fasta query.fasta
 ADD data/targetannotation.fasta targetannotation.fasta
+ADD data/clu.fasta clu.fasta
+ADD data/clu-tcov.fasta.gz clu-tcov.fasta.gz
+
 RUN mmseqs createdb query.fasta query
 RUN mmseqs createdb targetannotation.fasta db2
 
 WORKDIR ..
 
 ADD scripts/run_mmseqs_regression.sh /usr/local/bin/run_mmseqs_regression.sh
-RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 0 SEARCH $(nproc --all)
-RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 1 PROFILE $(nproc --all)
+ADD scripts/run_mmseqs_dbprofile_regression.sh /usr/local/bin/run_mmseqs_dbprofile_regression.sh
+ADD scripts/run_mmseqs_clu_regression.sh /usr/local/bin/run_mmseqs_clu_regression.sh
+ADD scripts/regression_report.sh /usr/local/bin/regression_report.sh
 
+RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 0 SEARCH $(nproc --all) > report
+RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 1 PROFILE $(nproc --all) >> report
+
+RUN time run_mmseqs_dbprofile_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') dbprof-results DBPROFILE $(nproc --all) >> report
+
+RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(mmseqs | awk '/^MMseqs Version:/ {print $3}') clu-results 0 "--cascaded --min-seq-id 0.3 -s 4 --threads $(nproc --all)" > report
+RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu-tcov.fasta.gz mmseqs LINCLU $(mmseqs | awk '/^MMseqs Version:/ {print $3}') linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.90 --threads $(nproc --all)" >> report
+
+RUN regression_report.sh report 0.235 0.331 0.22 12744 2990

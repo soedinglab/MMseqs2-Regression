@@ -1,33 +1,38 @@
 #!/bin/bash -e
-BENCHDIR="${1}"
+QUERY="${1}"
 MMSEQS="${2}"
-EVALUATE="${3}"
+NAME="${3}"
 VERSION="${4}"
 RESULTDIR="${5}"
-PROFILE="${6:-0}"
-NAME="${7:-regression-test}"
+LINCLUST="${6}"
+PARAMS="${7}"
 
-BENCHDB="small-benchmark-db"
-
-QUERY="$BENCHDIR/${BENCHDB}/clu.fasta"
-QUERYDB="$BENCHDIR/${BENCHDB}/clu"
 RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
+QUERYDB="$RESULTS/clu"
 
 TIMERS=()
 function lap() { TIMERS+=($(date +%s.%N)); }
-CLU_PARM="--min-seq-id 0.3 -s 4"
+
+MODE="cluster"
+BENCHID="3"
+if [[ "$LINCLUST" == 1 ]]; then
+    MODE="linclust"
+    BENCHID="6"
+fi
 
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
 lap
-${MMSEQS} cluster "$QUERYDB" "$RESULTS/results_clu" "$RESULTS/tmp" ${CLU_PARM} 1>&2 || exit 125 
+${MMSEQS} createdb "$QUERY" "$QUERYDB" 1>&2 || exit 125
 lap
-${MMSEQS} createtsv "$QUERYDB" "$QUERYDB" "$RESULTS/results_clu" "$RESULTS/results_clu.tsv" ${VERBOSE} 1>&2  || exit 125
+${MMSEQS} $MODE "$QUERYDB" "$RESULTS/results_clu" "$RESULTS/tmp" ${PARAMS} 1>&2 || exit 125
+lap
+${MMSEQS} createtsv "$QUERYDB" "$QUERYDB" "$RESULTS/results_clu" "$RESULTS/results_clu.tsv" 1>&2  || exit 125
 lap
 
-${EVALUATE} -d "$QUERY" -c "$RESULTS/results_clu.tsv" > "${EVALPREFIX}.log"
+RESULT="$(awk 'BEGIN { l = "" }  l != $1 { l = $1; cnt++; } { t++; } END { print cnt"\t"t"\t"(t/cnt) }' "$RESULTS/results_clu.tsv")"
+IFS=$'|' VALUES=(${RESULT//$'\t'/|})
+echo -e "${NAME}\t${VERSION}\t$(($BENCHID + 0))\t${VALUES[0]}\t$(printf '%s\t' "${TIMERS[@]}")"
+echo -e "${NAME}\t${VERSION}\t$(($BENCHID + 1))\t${VALUES[1]}\t$(printf '%s\t' "${TIMERS[@]}")"
+echo -e "${NAME}\t${VERSION}\t$(($BENCHID + 2))\t${VALUES[2]}\t$(printf '%s\t' "${TIMERS[@]}")"
 
-CLUSIZE=$(grep "^# clusters " "${EVALPREFIX}.log" | tail -n 1)
-CLUWRONG=$(grep "^#wrong sequences: " "${EVALPREFIX}.log" | awk '{print $3}')
-CLUCORRUPTED=$(grep "^#corrupted clusters: " "${EVALPREFIX}.log" | awk '{print $3}')
-echo -e "${NAME}\t${VERSION}\t${CLUSIZE}\t${CLUWRONG}\t${CLUCORRUPTED}\t$(printf '%s\t' "${TIMERS[@]}")"
