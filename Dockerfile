@@ -11,7 +11,7 @@ WORKDIR build
 RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=. ..
 RUN ninja && ninja install
 
-FROM soedinglab/mmseqs2 AS mmseqs
+FROM mmseqs2 AS mmseqs
 MAINTAINER Milot Mirdita <milot@mirdita.de>
 
 RUN apk add --no-cache coreutils gawk
