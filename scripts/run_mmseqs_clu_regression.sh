@@ -23,7 +23,7 @@ fi
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
 lap
-${MMSEQS} createdb "$QUERY" "$QUERYDB" 1>&2 || exit 125
+${MMSEQS} createdb $QUERY "$QUERYDB" 1>&2 || exit 125
 lap
 ${MMSEQS} $MODE "$QUERYDB" "$RESULTS/results_clu" "$RESULTS/tmp" ${PARAMS} 1>&2 || exit 125
 lap
