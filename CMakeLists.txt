@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(MMseqs_benchmark)
 
+if(CYGWIN)
+    add_definitions("-D_GNU_SOURCE")
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES CreateDataset.cpp)
