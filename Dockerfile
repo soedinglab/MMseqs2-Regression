@@ -35,13 +35,13 @@ ADD scripts/run_mmseqs_dbprofile_regression.sh /usr/local/bin/run_mmseqs_dbprofi
 ADD scripts/run_mmseqs_clu_regression.sh /usr/local/bin/run_mmseqs_clu_regression.sh
 ADD scripts/regression_report.sh /usr/local/bin/regression_report.sh
 
-RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 0 SEARCH $(nproc --all) > report
-RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') results 1 PROFILE $(nproc --all) >> report
+RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') results 0 SEARCH $(nproc --all) > report
+RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') results 1 PROFILE $(nproc --all) >> report
 
-RUN time run_mmseqs_dbprofile_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs Version:/ {print $3}') dbprof-results DBPROFILE $(nproc --all) >> report
+RUN time run_mmseqs_dbprofile_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') dbprof-results DBPROFILE $(nproc --all) >> report
 
-RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(mmseqs | awk '/^MMseqs Version:/ {print $3}') clu-results 0 "--cascaded --min-seq-id 0.3 -s 4 --threads $(nproc --all)" >> report
-RUN time run_mmseqs_clu_regression.sh "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" mmseqs LINCLU $(mmseqs | awk '/^MMseqs Version:/ {print $3}') linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.50 --threads $(nproc --all)" >> report
+RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') clu-results 0 "--cascaded --min-seq-id 0.3 -s 4 --threads $(nproc --all)" >> report
+RUN time run_mmseqs_clu_regression.sh "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" mmseqs LINCLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.50 --threads $(nproc --all)" >> report
 
 RUN cat report
 RUN regression_report.sh report 0.235 0.331 0.22 12744 26896
