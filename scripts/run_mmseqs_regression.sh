@@ -40,7 +40,7 @@ if [ $PROFILE -ne 0 ]; then
     LC_ALL=C sort -k1,1 -k11,11g "$RESULTS/results_aln.m8" > "$RESULTS/results_aln_sorted.m8"
     mv "$RESULTS/results_aln_sorted.m8" "$RESULTS/results_aln.m8"
 
-	${MMSEQS} createtsv "$QUERYDB" "$TARGETDB" "$RESULTS/tmp/pref_1.0" "$RESULTS/results_pref.tsv" ${VERBOSE} 1>&2  || exit 125
+	${MMSEQS} createtsv "$QUERYDB" "$TARGETDB" "$RESULTS/tmp/pref_1" "$RESULTS/results_pref.tsv" ${VERBOSE} 1>&2  || exit 125
 	awk '{print $1"\t"$2"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"$3"\t"0}' "$RESULTS/results_pref.tsv" > "$RESULTS/results_pref.m8"
     LC_ALL=C sort -k1,1 -k11,11g "$RESULTS/results_pref.m8" > "$RESULTS/results_pref_sorted.m8"
     mv "$RESULTS/results_pref_sorted.m8" "$RESULTS/results_pref.m8"
