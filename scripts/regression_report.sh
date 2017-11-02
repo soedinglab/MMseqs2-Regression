@@ -11,7 +11,7 @@ if [[ ! -s "${REPORT}" ]]; then
 fi
 
 AWKLEQ='{ print ($1 >= target) ? "GOOD" : "BAD" }'
-AWKNEQ='{ p1 = target * 0.005; print ($1 <= (target + p1) && $1 >= (target - p1)) ? "GOOD" : "BAD" }'
+AWKNEQ='{ p1 = 0; print ($1 <= (target + p1) && $1 >= (target - p1)) ? "GOOD" : "BAD" }'
 
 ERROR=0
 while IFS='' read -r line || [[ -n "$line" ]]; do
