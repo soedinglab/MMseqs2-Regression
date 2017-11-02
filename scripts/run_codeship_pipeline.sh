@@ -40,6 +40,6 @@ time ${RUNEVAL} "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" ${
 
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
-curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
+#curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
 ./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.331 0.22 17190 26896
 exit $?
