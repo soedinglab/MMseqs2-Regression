@@ -18,7 +18,7 @@ RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
 
 TIMERS=()
 function lap() { TIMERS+=($(date +%s.%N)); }
-SEARCH_PARM="--min-ungapped-score 15 -e 10000.0 -s 1 --max-seqs 4000 --split 1 --target-profile"
+SEARCH_PARM="--min-ungapped-score 15 -e 10000.0 -s 1 --max-seqs 4000 --split 1"
 
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
