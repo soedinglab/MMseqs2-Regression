@@ -26,8 +26,9 @@ fi
 
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
+mkdir -p "$RESULTS/tmp_index"
 lap
-${MMSEQS} createindex "$TARGETDB" --threads $THREADS --split 1 1>&2 || exit 125
+${MMSEQS} createindex "$TARGETDB" "$RESULTS/tmp_index"  --threads $THREADS --split 1 1>&2 || exit 125
 lap
 ${MMSEQS} search "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" --threads $THREADS ${SEARCH_PARM} 1>&2 || exit 125 
 lap
