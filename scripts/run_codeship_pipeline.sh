@@ -33,7 +33,7 @@ time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} dbprofile-results DBP
 
 cp mmseqs-benchmark/data/clu.fasta mmseqs-benchmark/data/clu-tcov.fasta.gz small-benchmark-db
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_clu_regression.sh"
-time ${RUNEVAL} small-benchmark-db/clu.fasta ${MMSEQSAVX} CLU ${CI_COMMIT_ID} clu-results 0 "--cascaded --min-seq-id 0.3 -s 2 --threads 16" \
+time ${RUNEVAL} small-benchmark-db/clu.fasta ${MMSEQSAVX} CLU ${CI_COMMIT_ID} clu-results 0 "--min-seq-id 0.3 -s 2 --cluster-steps 3 --threads 16" \
     >> report-${CI_COMMIT_ID}
 time ${RUNEVAL} "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" ${MMSEQSAVX} LINCLU ${CI_COMMIT_ID} linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.50 --threads 16" \
     >> report-${CI_COMMIT_ID}
