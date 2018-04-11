@@ -40,8 +40,8 @@ RUN time run_mmseqs_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MM
 
 RUN time run_mmseqs_dbprofile_regression.sh . mmseqs evaluate_results $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') dbprof-results DBPROFILE $(nproc --all) >> report
 
-RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') clu-results 0 "--min-seq-id 0.3 -s 4 --cluster-steps 3 --threads $(nproc --all)" >> report
-RUN time run_mmseqs_clu_regression.sh "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" mmseqs LINCLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') linclu-results 1 "--cov-mode 1 -c 0.90 --min-seq-id 0.50 --threads $(nproc --all)" >> report
+RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') clu-results 0 "--min-seq-id 0.3 -s 2 --cluster-steps 3 --threads $(nproc --all)" >> report
+RUN time run_mmseqs_clu_regression.sh "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" mmseqs LINCLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') linclu-results 1 "--cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --threads $(nproc --all)" >> report
 
 RUN cat report
-RUN regression_report.sh report 0.235 0.331 0.22 12744 26896
+RUN regression_report.sh report 0.235 0.331 0.22 17285 26819
