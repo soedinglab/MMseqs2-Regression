@@ -44,4 +44,4 @@ RUN time run_mmseqs_clu_regression.sh small-benchmark-db/clu.fasta mmseqs CLU $(
 RUN time run_mmseqs_clu_regression.sh "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" mmseqs LINCLU $(mmseqs | awk '/^MMseqs2? Version:/ {print $3}') linclu-results 1 "--cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --threads $(nproc --all)" >> report
 
 RUN cat report
-RUN regression_report.sh report 0.235 0.331 0.22 17285 26819
+RUN regression_report.sh report 0.235 0.334 0.22 17285 26819
