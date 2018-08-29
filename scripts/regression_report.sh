@@ -2,10 +2,11 @@
 REPORT="${1}"
 SEARCHROC="${2}"
 PROFILEROC="${3}"
-DBPROFROC="${4}"
-CSPROFROC="${5}"
-CLUNUM="${6}"
-LINCLUNUM="${7}"
+TNUCLROC="${4}"
+DBPROFROC="${5}"
+CSPROFROC="${6}"
+CLUNUM="${7}"
+LINCLUNUM="${8}"
 
 if [[ ! -s "${REPORT}" ]]; then
     exit 1
@@ -24,6 +25,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TEST=AWKLEQ
     elif [[ "${values[2]}" -eq "1" ]]; then
         TARGET=$PROFILEROC
+        TEST=AWKLEQ
+    elif [[ "${values[2]}" -eq "11" ]]; then
+        TARGET=$TNUCLROC
         TEST=AWKLEQ
     elif [[ "${values[2]}" -eq "9" ]]; then
         TARGET=$DBPROFROC
