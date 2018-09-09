@@ -32,7 +32,7 @@ lap
 lap
 "${MMSEQS}" result2profile "${QUERYDB}" "${TARGETDB}" "${RESULTS}/aln_query_target" "${RESULTS}/query_profile" 1>&2 || exit 125
 lap
-"${MMSEQS}" search "${RESULTS}/query_profile" "${RESULTS}/target_profile_states" "${RESULTS}/results_aln" "${RESULTS}/tmp" --max-seqs 4000 -e 100000.0 -s 2  --min-ungapped-score 0 1>&2 || exit 125
+"${MMSEQS}" search "${RESULTS}/query_profile" "${RESULTS}/target_profile_states" "${RESULTS}/results_aln" "${RESULTS}/tmp" --max-seqs 4000 -e 100000.0 -s 4 -k 10  --min-ungapped-score 0 1>&2 || exit 125
 lap
 "${MMSEQS}" convertalis "${QUERYDB}" "${TARGETDB}" "${RESULTS}/results_aln" "${RESULTS}/results_aln.m8" 1>&2 || exit 125
 lap
