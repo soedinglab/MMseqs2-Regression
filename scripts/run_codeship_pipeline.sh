@@ -34,8 +34,8 @@ RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_dbprofile_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} dbprofile-results DBPROFILE 16 >> report-${CI_COMMIT_ID}
-RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_profilestates_regression.sh"
-time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} csprofile-results CSPROFILE 16 >> report-${CI_COMMIT_ID}
+#RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_profilestates_regression.sh"
+#time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} csprofile-results CSPROFILE 16 >> report-${CI_COMMIT_ID}
 
 cp mmseqs-benchmark/data/clu.fasta mmseqs-benchmark/data/clu-tcov.fasta.gz small-benchmark-db
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_clu_regression.sh"
