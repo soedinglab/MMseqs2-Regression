@@ -44,10 +44,10 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TARGET=$LINCLUNUM
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "12" ]]; then
-        TARGET=$MULTHIT1
+        TARGET=${MULTIHIT1}
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "13" ]]; then
-        TARGET=$MULTIHIT2
+        TARGET=${MULTIHIT2}
         TEST=AWKNEQ
     else
         continue
