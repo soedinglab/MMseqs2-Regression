@@ -7,6 +7,8 @@ DBPROFROC="${5}"
 CSPROFROC="${6}"
 CLUNUM="${7}"
 LINCLUNUM="${8}"
+MULTIHIT1="${9}"
+MULTIHIT2="${10}"
 
 if [[ ! -s "${REPORT}" ]]; then
     exit 1
@@ -40,6 +42,12 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "6" ]]; then
         TARGET=$LINCLUNUM
+        TEST=AWKNEQ
+    elif [[ "${values[2]}" -eq "12" ]]; then
+        TARGET=$MULTHIT1
+        TEST=AWKNEQ
+    elif [[ "${values[2]}" -eq "13" ]]; then
+        TARGET=$MULTIHIT2
         TEST=AWKNEQ
     else
         continue

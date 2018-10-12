@@ -21,6 +21,8 @@ ${MMSEQSSSE} createdb mmseqs-benchmark/data/query.fasta small-benchmark-db/query
 ${MMSEQSSSE} createdb mmseqs-benchmark/data/targetannotation.fasta small-benchmark-db/db2
 cp mmseqs-benchmark/data/query.fasta mmseqs-benchmark/data/targetannotation.fasta small-benchmark-db
 
+cp mmseqs-benchmark/data/{q,t}set{01,02}.fas.gz small-benchmark-db
+
 # go run it
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_regression.sh"
 EVALUATE="./mmseqs-benchmark/build/evaluate_results"
@@ -44,8 +46,11 @@ time ${RUNEVAL} small-benchmark-db/clu.fasta ${MMSEQSAVX} CLU ${CI_COMMIT_ID} cl
 time ${RUNEVAL} "small-benchmark-db/query.fasta small-benchmark-db/clu.fasta" ${MMSEQSAVX} LINCLU ${CI_COMMIT_ID} linclu-results 1 "--cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --threads 16" \
     >> report-${CI_COMMIT_ID}
 
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_multihit_regression.sh"
+time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> report-${CI_COMMIT_ID}
+
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
 #curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
-./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.203 0.245 17299 26823
+./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.203 0.245 17299 26823 8.387E-203 3.613E-142
 exit $?
