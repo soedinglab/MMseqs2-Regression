@@ -9,8 +9,9 @@ THREADS="${6:-4}"
 
 BENCHDB="small-benchmark-db"
 
+mkdir -p "$RESULTDIR" && cd "$RESULTDIR"
+
 ##### multihitdb #####
-cd "$RESULTDIR"
 $MMSEQS multihitdb "$BENCHDIR/$BENCHDB/qset_01.fas.gz" "$BENCHDIR/$BENCHDB/qset_02.fas.gz" qsetsdb tmp 1>&2 || exit 125
 $MMSEQS multihitdb "$BENCHDIR/$BENCHDB/tset_01.fas.gz" "$BENCHDIR/$BENCHDB/tset_02.fas.gz" tsetsdb tmp 1>&2 || exit 125
 
