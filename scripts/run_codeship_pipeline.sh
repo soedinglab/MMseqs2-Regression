@@ -21,7 +21,7 @@ ${MMSEQSSSE} createdb mmseqs-benchmark/data/query.fasta small-benchmark-db/query
 ${MMSEQSSSE} createdb mmseqs-benchmark/data/targetannotation.fasta small-benchmark-db/db2
 cp mmseqs-benchmark/data/query.fasta mmseqs-benchmark/data/targetannotation.fasta small-benchmark-db
 
-cp mmseqs-benchmark/data/{q,t}set{01,02}.fas.gz small-benchmark-db
+cp mmseqs-benchmark/data/{q,t}set_{01,02}.fas.gz small-benchmark-db
 
 # go run it
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_regression.sh"
