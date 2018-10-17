@@ -4,11 +4,12 @@ SEARCHROC="${2}"
 PROFILEROC="${3}"
 TNUCLROC="${4}"
 DBPROFROC="${5}"
-CSPROFROC="${6}"
-CLUNUM="${7}"
-LINCLUNUM="${8}"
-MULTIHIT1="${9}"
-MULTIHIT2="${10}"
+SLICEPROFROC="${6}"
+CSPROFROC="${7}"
+CLUNUM="${8}"
+LINCLUNUM="${9}"
+MULTIHIT1="${10}"
+MULTIHIT2="${11}"
 
 if [[ ! -s "${REPORT}" ]]; then
     exit 1
@@ -48,6 +49,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "13" ]]; then
         TARGET=${MULTIHIT2}
+        TEST=AWKNEQ
+    elif [[ "${values[2]}" -eq "14" ]]; then
+        TARGET=${SLICEPROFROC}
         TEST=AWKNEQ
     else
         continue

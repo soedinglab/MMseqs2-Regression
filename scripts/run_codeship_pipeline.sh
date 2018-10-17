@@ -34,6 +34,8 @@ ${MMSEQSAVX} translateaa small-benchmark-db/query small-benchmark-db/nucl
 ( cd small-benchmark-db && ln -sf query_h nucl_h && ln -sf query_h.index nucl_h.index )
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_sliceprofile_regression.sh"
+time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} sliceprofile-results SLICEPROFILE 16 >> report-${CI_COMMIT_ID}
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_dbprofile_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} dbprofile-results DBPROFILE 16 >> report-${CI_COMMIT_ID}
 #RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_profilestates_regression.sh"
@@ -52,5 +54,5 @@ time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> re
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
 #curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
-./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.142 0.245 17299 26823 1.449E-215 3.613E-142
+./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.142 0.140 0.245 17299 26823 1.449E-215 3.613E-142
 exit $?
