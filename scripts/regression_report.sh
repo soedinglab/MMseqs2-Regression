@@ -52,7 +52,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "14" ]]; then
         TARGET=${SLICEPROFROC}
-        TEST=AWKNEQ
+        TEST=AWKLEQ
     else
         continue
     fi
