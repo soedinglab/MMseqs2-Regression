@@ -10,6 +10,7 @@ CLUNUM="${8}"
 LINCLUNUM="${9}"
 MULTIHIT1="${10}"
 MULTIHIT2="${11}"
+EXTRACTORFS="${12}"
 
 if [[ ! -s "${REPORT}" ]]; then
     exit 1
@@ -53,6 +54,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     elif [[ "${values[2]}" -eq "14" ]]; then
         TARGET=${SLICEPROFROC}
         TEST=AWKLEQ
+    elif [[ "${values[2]}" -eq "15" ]]; then
+        TARGET=${EXTRACTORFS}
+        TEST=AWKNEQ
     else
         continue
     fi
