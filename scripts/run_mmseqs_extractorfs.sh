@@ -10,6 +10,7 @@ THREADS="${7:-4}"
 QUERY="$BENCHDIR/data/dna.fas"
 
 RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
+mkdir -p "${RESULTS}"
 
 ${MMSEQS} createdb "${QUERY}" "${RESULTS}/dna" 1>&2 || exit 125
 ${MMSEQS} extractorfs "${RESULTS}/dna" "${RESULTS}/coding_frags_mode_0" --threads ${THREADS} --min-length 1 --orf-start-mode 0 --contig-start-mode 2 --contig-end-mode 2 --forward-frames 1,2,3 --reverse-frames 1,2,3 1>&2 || exit 125
