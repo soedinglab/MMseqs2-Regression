@@ -52,7 +52,7 @@ RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_multihit_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> report-${CI_COMMIT_ID}
 
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_extractorfs.sh"
-time ${RUNEVAL} "./mmseqs-benchmark" ${MMSEQSAVX} "./mmseqs-benchmark/scripts" ${CI_COMMIT_ID} results EXTRACTORFS 16 
+time ${RUNEVAL} "./mmseqs-benchmark" ${MMSEQSAVX} "./mmseqs-benchmark/scripts" ${CI_COMMIT_ID} results EXTRACTORFS 16 >> report-${CI_COMMIT_ID}
 
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
