@@ -33,9 +33,10 @@ time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 1 AXX2_PROFIL
 ${MMSEQSAVX} translateaa small-benchmark-db/query small-benchmark-db/nucl
 ( cd small-benchmark-db && ln -sf query_h nucl_h && ln -sf query_h.index nucl_h.index )
 ${MMSEQSAVX} translateaa small-benchmark-db/db2 small-benchmark-db/db2nucl
-( cd small-benchmark-db && ln -sf db2_h db2nucl_h && ln -sf db2_h.index db2nucl_h.index )
-RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
+( cd small-benchmark-db && ln -sf db2_h db2nucl_h && ln -sf db2_h.index db2nucl_h.index )
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_nucl_regression.sh"
+time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCLNUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_sliceprofile_regression.sh"
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} sliceprofile-results SLICEPROFILE 16 >> report-${CI_COMMIT_ID}
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_dbprofile_regression.sh"
