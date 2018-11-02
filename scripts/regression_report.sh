@@ -60,7 +60,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
         TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "16" ]]; then
         TARGET=${NUCLNUCLROC}
-        TEST=AWKNEQ
+        TEST=AWKLEQ
     else
         continue
     fi
