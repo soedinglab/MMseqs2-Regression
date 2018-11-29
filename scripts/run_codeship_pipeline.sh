@@ -26,10 +26,12 @@ cp mmseqs-benchmark/data/{q,t}set_{01,02}.fas.gz small-benchmark-db
 # go run it
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_regression.sh"
 EVALUATE="./mmseqs-benchmark/build/evaluate_results"
-time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 SSE_SEARCH 16 > report-${CI_COMMIT_ID}
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 0 AVX2_SEARCH 16 >> report-${CI_COMMIT_ID}
-time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
 time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results 1 AXX2_PROFILE 16 >> report-${CI_COMMIT_ID}
+RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_easy_regression.sh"
+time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 EASY_SSE_SEARCH 16 > report-${CI_COMMIT_ID}
+time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 EASY_SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
+
 ${MMSEQSAVX} translateaa small-benchmark-db/query small-benchmark-db/nucl
 ( cd small-benchmark-db && ln -sf query_h nucl_h && ln -sf query_h.index nucl_h.index )
 ${MMSEQSAVX} translateaa small-benchmark-db/db2 small-benchmark-db/db2nucl
