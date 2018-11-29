@@ -69,5 +69,5 @@ time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCLNUCL_SEAR
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
 #curl -F upfile=@report-${CI_COMMIT_ID} https://mmseqs.com/regression.php?secret=${REGRESSIONSECRET}
-./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.142 0.140 0.245 17299 26823 1.112E-202 4.032E-142 0 0.177 17299 26823
+./mmseqs-benchmark/scripts/regression_report.sh report-${CI_COMMIT_ID} 0.235 0.334 0.235 0.142 0.140 0.245 17299 26505 1.112E-202 4.032E-142 0 0.177 
 exit $?

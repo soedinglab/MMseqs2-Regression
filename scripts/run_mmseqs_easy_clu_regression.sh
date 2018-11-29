@@ -14,10 +14,10 @@ TIMERS=()
 function lap() { TIMERS+=($(date +%s.%N)); }
 
 MODE="easy-cluster"
-BENCHID="14"
+BENCHID="17"
 if [[ "$LINCLUST" == 1 ]]; then
     MODE="easy-linclust"
-    BENCHID="15"
+    BENCHID="18"
 fi
 
 rm -rf "$RESULTS"
