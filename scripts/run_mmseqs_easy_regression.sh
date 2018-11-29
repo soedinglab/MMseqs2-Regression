@@ -12,7 +12,6 @@ BENCHDB="small-benchmark-db"
 
 QUERY="$BENCHDIR/${BENCHDB}/query.fasta"
 QUERYDB="$BENCHDIR/${BENCHDB}/query"
-TARGETDB="$BENCHDIR/${BENCHDB}/db2.fasta"
 DBANNOTATION="$BENCHDIR/${BENCHDB}/targetannotation.fasta"
 
 RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
@@ -27,7 +26,7 @@ fi
 rm -rf "$RESULTS"
 mkdir -p "$RESULTS/tmp"
 lap
-${MMSEQS} easy-search "$QUERY" "$TARGETDB" "$RESULTS/results_aln.m8" "$RESULTS/tmp" --threads $THREADS ${SEARCH_PARM} 1>&2 || exit 125 
+${MMSEQS} easy-search "$QUERY" "$DBANNOTATION" "$RESULTS/results_aln.m8" "$RESULTS/tmp" --threads $THREADS ${SEARCH_PARM} 1>&2 || exit 125 
 lap
 
 EVALPREFIX="${RESULTS}/evaluation"
