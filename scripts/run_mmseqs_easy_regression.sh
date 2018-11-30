@@ -18,9 +18,9 @@ RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
 
 TIMERS=()
 function lap() { TIMERS+=($(date +%s.%N)); }
-SEARCH_PARM="--min-ungapped-score 15 -e 10000.0 -s 4 --max-seqs 4000 --split 1"
+SEARCH_PARM="--min-ungapped-score 15 -e 10000.0 -s 4 --max-seqs 4000 --split 1 --format-output query,target,pident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits"
 if [ $PROFILE -ne 0 ]; then
-    SEARCH_PARM="--min-ungapped-score 0 -e 10000.0 -s 4 --max-seqs 4000 --num-iterations 2 --split 1 "
+    SEARCH_PARM="--min-ungapped-score 0 -e 10000.0 -s 4 --max-seqs 4000 --num-iterations 2 --split 1"
 fi
 
 rm -rf "$RESULTS"
