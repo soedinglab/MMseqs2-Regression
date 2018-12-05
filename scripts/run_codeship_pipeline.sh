@@ -62,9 +62,9 @@ time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> re
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_extractorfs.sh"
 time ${RUNEVAL} "./mmseqs-benchmark" ${MMSEQSAVX} "./mmseqs-benchmark/scripts" ${CI_COMMIT_ID} results EXTRACTORFS 16 >> report-${CI_COMMIT_ID}
 
-( cd small-benchmark-db && ln -sf db2_h db2nucl_h && ln -sf db2_h.index db2nucl_h.index && ln -sf db2_h.dbtype db2nucl_h.dbtype )
-RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_nucl_regression.sh"
-time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCLNUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
+#( cd small-benchmark-db && ln -sf db2_h db2nucl_h && ln -sf db2_h.index db2nucl_h.index && ln -sf db2_h.dbtype db2nucl_h.dbtype )
+#RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_nucl_nucl_regression.sh"
+#time ${RUNEVAL} . ${MMSEQSAVX} ${EVALUATE} ${CI_COMMIT_ID} results NUCLNUCL_SEARCH 16 >> report-${CI_COMMIT_ID}
 
 # fill out the report and fail
 cat report-${CI_COMMIT_ID}
