@@ -33,7 +33,7 @@ time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 0 EASY_SSE_SE
 time ${RUNEVAL} . ${MMSEQSSSE} ${EVALUATE} ${CI_COMMIT_ID} results 1 EASY_SSE_PROFILE 16 >> report-${CI_COMMIT_ID}
 
 ${MMSEQSAVX} translateaa small-benchmark-db/query small-benchmark-db/nucl
-( cd small-benchmark-db && ln -sf query_h nucl_h && ln -sf query_h.index nucl_h.index && query_h.dbtype nucl_h.dbtype )
+( cd small-benchmark-db && ln -sf query_h nucl_h && ln -sf query_h.index nucl_h.index && ln -sf query_h.dbtype nucl_h.dbtype )
 ${MMSEQSAVX} translateaa small-benchmark-db/db2 small-benchmark-db/db2nucl
 ( cd small-benchmark-db && ln -sf db2_h db2nucl_h && ln -sf db2_h.index db2nucl_h.index && ln -sf db2_h.dbtype db2nucl_h.dbtype )
 
