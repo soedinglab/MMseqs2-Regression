@@ -58,8 +58,8 @@ time ${RUNEVAL} small-benchmark-db/clu.fasta ${MMSEQSAVX} CLU ${CI_COMMIT_ID} cl
 time ${RUNEVAL} "small-benchmark-db/clu.fasta" ${MMSEQSAVX} LINCLU ${CI_COMMIT_ID} linclu-results 1 "--cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --threads 16" \
     >> report-${CI_COMMIT_ID}
 
-RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_multihit_regression.sh"
-time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> report-${CI_COMMIT_ID}
+#RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_multihit_regression.sh"
+#time ${RUNEVAL} . ${MMSEQSAVX} ${CI_COMMIT_ID} multihit-results MULTHIT 16 >> report-${CI_COMMIT_ID}
 
 RUNEVAL="./mmseqs-benchmark/scripts/run_mmseqs_extractorfs.sh"
 time ${RUNEVAL} "./mmseqs-benchmark" ${MMSEQSAVX} "./mmseqs-benchmark/scripts" ${CI_COMMIT_ID} results EXTRACTORFS 16 >> report-${CI_COMMIT_ID}
