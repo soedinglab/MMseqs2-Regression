@@ -12,6 +12,7 @@ MULTIHIT1="${10}"
 MULTIHIT2="${11}"
 EXTRACTORFS="${12}"
 NUCLNUCLROC="${13}"
+RBH="${14}"
 
 if [[ ! -s "${REPORT}" ]]; then
     exit 1
@@ -67,6 +68,12 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     elif [[ "${values[2]}" -eq "18" ]]; then
         TARGET=${LINCLUNUM}
         TEST=AWKLEQ
+    elif [[ "${values[2]}" -eq "19" ]]; then
+        TARGET=${RBH}
+        TEST=AWKNEQ
+    elif [[ "${values[2]}" -eq "20" ]]; then
+        TARGET=${RBH}
+        TEST=AWKNEQ
     else
         continue
     fi
