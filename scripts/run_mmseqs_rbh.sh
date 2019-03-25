@@ -25,14 +25,15 @@ BPROTEINS="$BENCHDIR/data/RBHproteinsB.fas"
 RESULTS="${RESULTDIR}/mmseqs-${NAME}-${VERSION}"
 mkdir -p "${RESULTS}"
 
+#  1>&2 || exit 125 --> move output to stderr
 ${MMSEQS} createdb "${APROTEINS}" "${RESULTS}/proteinsA" 1>&2 || exit 125
 ${MMSEQS} createdb "${BPROTEINS}" "${RESULTS}/proteinsB" 1>&2 || exit 125
-${MMSEQS} rbh "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/tmp"
-${MMSEQS} convertalis "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/rbhAB.m8"
+${MMSEQS} rbh "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/tmp" 1>&2 || exit 125
+${MMSEQS} convertalis "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/rbhAB.m8" 1>&2 || exit 125
 
 # both of these should be 4
 TOTAL_NUM_LINES=$(cat rbhAB.m8 | wc -l)
 NUM_GOOD_MATCHES=$(grep -P "seqA(\d)\tseqB\1\t" rbhAB.m8 | wc -l)
-echo -e "${NAME}\t${VERSION}\t19\t${TOTAL_NUM_LINES}"
-echo -e "${NAME}\t${VERSION}\t20\t${NUM_GOOD_MATCHES}"
+echo -e "${NAME}\t${VERSION}\t23\t${TOTAL_NUM_LINES}"
+echo -e "${NAME}\t${VERSION}\t24\t${NUM_GOOD_MATCHES}"
 
