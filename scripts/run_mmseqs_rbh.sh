@@ -32,8 +32,8 @@ ${MMSEQS} rbh "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "
 ${MMSEQS} convertalis "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/rbhAB.m8" 1>&2 || exit 125
 
 # both of these should be 4
-TOTAL_NUM_LINES=$(cat rbhAB.m8 | wc -l)
-NUM_GOOD_MATCHES=$(grep -P "seqA(\d)\tseqB\1\t" rbhAB.m8 | wc -l)
+TOTAL_NUM_LINES=$(cat "${RESULTS}/rbhAB.m8" | wc -l)
+NUM_GOOD_MATCHES=$(grep -P "seqA(\d)\tseqB\1\t" "${RESULTS}/rbhAB.m8" | wc -l)
 echo -e "${NAME}\t${VERSION}\t23\t${TOTAL_NUM_LINES}"
 echo -e "${NAME}\t${VERSION}\t24\t${NUM_GOOD_MATCHES}"
 
