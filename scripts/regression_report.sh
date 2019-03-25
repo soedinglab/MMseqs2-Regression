@@ -65,8 +65,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     elif [[ "${values[2]}" -eq "17" ]]; then
         TARGET=${CLUNUM}
         TEST=AWKNEQ
-    elif [[ "${values[2]}" -eq "18" ]]; then
+    elif [[ "${values[2]}" -eq "20" ]]; then
         TARGET=${LINCLUNUM}
+        TEST=AWKNEQ
     elif [[ "${values[2]}" -eq "23" ]]; then
         TARGET=${RBH}
         TEST=AWKNEQ

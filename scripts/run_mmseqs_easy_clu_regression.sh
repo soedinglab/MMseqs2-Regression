@@ -17,7 +17,7 @@ MODE="easy-cluster"
 BENCHID="17"
 if [[ "$LINCLUST" == 1 ]]; then
     MODE="easy-linclust"
-    BENCHID="18"
+    BENCHID="20"
 fi
 
 rm -rf "$RESULTS"
