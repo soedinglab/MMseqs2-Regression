@@ -62,6 +62,15 @@ sub parse_mmseqs2_orfs
 		if ($line ne '')
 		{
 			$line = uc $line;
+			# remove invisible chars:
+			if ($line =~ m/([A-Z]+)/)
+			{
+				$line = $1;
+			}
+			if ((length($line) % 3) != 0)
+			{
+				die "MMseqs2 produced a fragment that is not divisible by 3: '$line'\n";
+			}
 			$mmseqs2_frags_hash_ref->{$line} = 1;
 			$num_records++;
 		}
