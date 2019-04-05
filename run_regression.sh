@@ -24,7 +24,7 @@ time "${SCRIPTS}/run_easy_profile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${
 time "${SCRIPTS}/run_sliceprofile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/SLICEPROFILE"; TESTS="SLICEPROFILE ${TESTS}"
 time "${SCRIPTS}/run_dbprofile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/DBPROFILE"; TESTS="DBPROFILE ${TESTS}"
 time "${SCRIPTS}/run_nuclprot.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/NUCLPROT_SEARCH"; TESTS="NUCLPROT_SEARCH ${TESTS}"
-time "${SCRIPTS}/run_nuclnucl.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/NUCLNUCL_SEARCH"; TESTS="NUCLNUCL_SEARCH ${TESTS}"
+# time "${SCRIPTS}/run_nuclnucl.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/NUCLNUCL_SEARCH"; TESTS="NUCLNUCL_SEARCH ${TESTS}"
 time "${SCRIPTS}/run_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/CLUSTER"; TESTS="CLUSTER ${TESTS}"
 time "${SCRIPTS}/run_easy_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/EASY_CLUSTER"; TESTS="EASY_CLUSTER ${TESTS}"
 time "${SCRIPTS}/run_linclust.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST"; TESTS="LINCLUST ${TESTS}"
