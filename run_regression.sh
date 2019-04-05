@@ -3,17 +3,12 @@ MMSEQS="${1}"
 RESULTS="${2}"
 mkdir -p "${RESULTS}"
 
-BASE="$(dirname "$((readlink -f -- "$0" 2>/dev/null) || (greadlink -f -- "$0"))")"
+BASE="$(dirname "$( (readlink -f -- "$0" 2>/dev/null) || (greadlink -f -- "$0") )")"
+cd "${BASE}"
 
 # build the benchmark tools
-pushd "${BASE}"
 git submodule update --init
-mkdir -p build
-pushd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j4
-popd
-popd
+(mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j4)
 
 DATADIR="${BASE}/data"
 SCRIPTS="${BASE}/regression"
@@ -40,18 +35,18 @@ time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="R
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
 set -e
 
-echo "\n"
+printf "\n"
 ERR=0
 for i in ${TESTS} ; do
     echo "$i"
     if [ ! -f "${RESULTS}/${i}/report" ]; then
-        echo "TEST FAILED (NO REPORT)\n"
+        printf "TEST FAILED (NO REPORT)\n\n"
         ERR=$((ERR+1))
         continue
     fi
 
     if [ ! -s "${RESULTS}/${i}/report" ]; then
-        echo "TEST FAILED (EMPTY REPORT)\n"
+        printf "TEST FAILED (EMPTY REPORT)\n\n"
         ERR=$((ERR+1))
         continue
     fi
@@ -63,7 +58,7 @@ for i in ${TESTS} ; do
         echo "TEST SUCCESS"
     fi
     cat "${RESULTS}/${i}/report"
-    echo "\n"
+    printf "\n"
 done
 
 exit "$ERR"

@@ -25,8 +25,8 @@ BPROTEINS="${DATADIR}/RBHproteinsB.fas"
 "${MMSEQS}" convertalis "${RESULTS}/proteinsA" "${RESULTS}/proteinsB" "${RESULTS}/rbhAB" "${RESULTS}/rbhAB.m8"
 
 # both of these should be 5
-TOTAL_NUM_LINES="$(cat "${RESULTS}/rbhAB.m8" | wc -l)"
-NUM_GOOD_MATCHES="$(ggrep -P "seqA(\d)(_also_best)?\tseqB\1(_also_best)?\t" "${RESULTS}/rbhAB.m8" | wc -l)"
+TOTAL_NUM_LINES="$(wc -l < "${RESULTS}/rbhAB.m8")"
+NUM_GOOD_MATCHES="$(grep -P "seqA(\d)(_also_best)?\tseqB\1(_also_best)?\t" "${RESULTS}/rbhAB.m8" | wc -l)"
 ACTUAL="$((TOTAL_NUM_LINES+NUM_GOOD_MATCHES))"
 TARGET="10"
 awk -v actual="$ACTUAL" -v target="$TARGET" \
