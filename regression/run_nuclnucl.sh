@@ -21,7 +21,7 @@ ln -sf "${TARGETDB}_h" "${TARGETDB}_nucl_h"
 ln -sf "${TARGETDB}_h.index" "${TARGETDB}_nucl_h.index"
 ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 
-"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000
+"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 -k 10
 "${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
 
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
