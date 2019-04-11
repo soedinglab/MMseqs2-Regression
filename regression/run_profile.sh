@@ -14,7 +14,7 @@ TARGETDB="${RESULTS}/targetannotation"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
 
 "${MMSEQS}" createindex "$TARGETDB" "$RESULTS/tmp"
-"${MMSEQS}" search "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 4 --max-seqs 4000 --num-iterations 2
+"${MMSEQS}" search "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 4 --max-seqs 4000 --num-iterations 3
 "${MMSEQS}" convertalis "$QUERYDB" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
 LC_ALL=C sort -k1,1 -k11,11g "$RESULTS/results_aln.m8" > "$RESULTS/results_aln_sorted.m8"
 
