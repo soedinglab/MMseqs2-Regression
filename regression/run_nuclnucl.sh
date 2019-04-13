@@ -21,8 +21,10 @@ ln -sf "${TARGETDB}_h" "${TARGETDB}_nucl_h"
 ln -sf "${TARGETDB}_h.index" "${TARGETDB}_nucl_h.index"
 ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 
-"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 -k 10
+"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 -k 10 -a
 "${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
+"${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.sam" --format-mode 1
+samtools view -b -h "$RESULTS/results_aln.sam" > "$RESULTS/results_aln.bam"
 
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
 ACTUAL=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
