@@ -23,7 +23,7 @@ ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 
 "${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 --search-type 2 -a 
 "${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
-"${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.sam" --format-mode 1
+"${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.sam" --format-mode 1 --search-type 2 
 samtools view -b -h "$RESULTS/results_aln.sam" > "$RESULTS/results_aln.bam"
 
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
