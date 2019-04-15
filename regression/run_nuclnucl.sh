@@ -21,7 +21,7 @@ ln -sf "${TARGETDB}_h" "${TARGETDB}_nucl_h"
 ln -sf "${TARGETDB}_h.index" "${TARGETDB}_nucl_h.index"
 ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 
-"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 -k 10 -a --search-type 3
+"${MMSEQS}" search "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 -s 1 --max-seqs 4000 -k 13 -a --search-type 3
 "${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.m8" --search-type 3 
 "${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.sam" --format-mode 1 --search-type 3 
 samtools view -b -h "$RESULTS/results_aln.sam" > "$RESULTS/results_aln.bam"
