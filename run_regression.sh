@@ -8,7 +8,7 @@ cd "${BASE}"
 
 # build the benchmark tools
 git submodule update --init
-(mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j4)
+(mkdir -p build && cd build && cmake -DHAVE_MPI=0 -DCMAKE_BUILD_TYPE=Release .. && make -j4)
 
 DATADIR="${BASE}/data"
 SCRIPTS="${BASE}/regression"
@@ -30,6 +30,7 @@ time "${SCRIPTS}/run_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/CLUSTER"; 
 time "${SCRIPTS}/run_easy_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/EASY_CLUSTER"; TESTS="EASY_CLUSTER ${TESTS}"
 time "${SCRIPTS}/run_linclust.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST"; TESTS="LINCLUST ${TESTS}"
 time "${SCRIPTS}/run_easy_linclust.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/EASY_LINCLUST"; TESTS="EASY_LINCLUST ${TESTS}"
+time "${SCRIPTS}/run_nuclprottax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/NUCLPROTTAX_SEARCH"; TESTS="NUCLPROTTAX_SEARCH ${TESTS}"
 # time "${SCRIPTS}/run_multihit.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MULTHIT"; TESTS="MULTHIT ${TESTS}"
 time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
 time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
