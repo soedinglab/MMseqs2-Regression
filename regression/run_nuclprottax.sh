@@ -27,7 +27,7 @@ BACTERIA=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_bacteria.index" | wc -l| 
 VIRUS=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_virus.index" | wc -l| awk '{print $1}')
 EUKARYOTA=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_eukaryota.index" | wc -l| awk '{print $1}')
 
-TARGET="2546 259 2716"
+TARGET="2524 259 2713"
 ACTUAL="$BACTERIA $VIRUS $EUKARYOTA"
 awk -v actual="$ACTUAL" -v target="$TARGET" \
     'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
