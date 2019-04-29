@@ -27,8 +27,16 @@ BACTERIA=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_bacteria.index" | wc -l| 
 VIRUS=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_virus.index" | wc -l| awk '{print $1}')
 EUKARYOTA=$(awk '$3 != 1 {print}' "$RESULTS/results_aln_eukaryota.index" | wc -l| awk '{print $1}')
 
-TARGET="2524 259 2713"
-ACTUAL="$BACTERIA $VIRUS $EUKARYOTA"
-awk -v actual="$ACTUAL" -v target="$TARGET" \
-    'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-    > "${RESULTS}/report"
+# Create taxreport
+"${MMSEQS}" taxonomyreport -v 3 "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_taxreport"
+
+# Check numbers in taxreport
+R_BACTERIA=$(grep 'superkingdom.*Bacteria' "$RESULTS/results_aln_taxreport" | cut -f 2)
+R_VIRUS=$(grep 'superkingdom.*Virus' "$RESULTS/results_aln_taxreport" | cut -f 2)
+R_EUKARYOTA=$(grep 'superkingdom.*Eukaryota' "$RESULTS/results_aln_taxreport" | cut -f 2)
+
+TARGET="from filtertaxdb: 2524 259 2713; from taxonomyreport: 2524 259 2713"
+ACTUAL="from filtertaxdb: $BACTERIA $VIRUS $EUKARYOTA; from taxonomyreport: $R_BACTERIA $R_VIRUS $R_EUKARYOTA"
+awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
+    print "Expected: ", target; \
+    print "Actual:   ", actual; }' > "${RESULTS}/report"
