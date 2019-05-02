@@ -35,6 +35,7 @@ time "${SCRIPTS}/run_nuclprottax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${R
 time "${SCRIPTS}/run_dbprofile_index.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/DBPROFILE_INDEX"; TESTS="DBPROFILE_INDEX ${TESTS}"
 time "${SCRIPTS}/run_nuclnucl_linsearchtranslated.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/LINSEARCH_NUCLNUCL_TARNS_SEARCH"; TESTS="LINSEARCH_NUCLNUCL_TARNS_SEARCH ${TESTS}"
 time "${SCRIPTS}/run_nuclnucl_linsearch.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/LINSEARCH_NUCLNUCL_SEARCH"; TESTS="LINSEARCH_NUCLNUCL_SEARCH ${TESTS}"
+time "${SCRIPTS}/run_cluster_update.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST_UPDATE"; TESTS="LINCLUST_UPDATE ${TESTS}"
 # time "${SCRIPTS}/run_multihit.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MULTHIT"; TESTS="MULTHIT ${TESTS}"
 #time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
 #time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
