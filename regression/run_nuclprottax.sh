@@ -18,7 +18,7 @@ TARGETDB="${RESULTS}/targetannotation"
 TARGETDB_MAPPING="${DATADIR}/targetannotation.mapping"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
 "${MMSEQS}" createtaxdb "${TARGETDB}" "${TARGETDB_MAPPING}" "${DATADIR}/ncbitax" "$RESULTS/tmp"  
-"${MMSEQS}" taxonomy "${QUERYDB}_nucl" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" --blacklist "0" -e 10000 -s 4 --max-seqs 4000
+"${MMSEQS}" taxonomy "${QUERYDB}_nucl" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" --lca-mode 3 --blacklist "0" -e 10000 -s 4 --max-seqs 4000
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_bacteria" --taxon-list 2 
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_virus" --taxon-list 10239
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_eukaryota" --taxon-list 2759 
