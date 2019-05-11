@@ -28,7 +28,7 @@ ln -sf "${TARGETDB}.lookup" "${TARGETDB}_nucl.lookup"
 TARGETDB_MAPPING="${DATADIR}/targetannotation.mapping"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
 "${MMSEQS}" createtaxdb "${TARGETDB}_nucl" "${TARGETDB_MAPPING}" "${DATADIR}/ncbitax" "$RESULTS/tmp"  
-"${MMSEQS}" easy-taxonomy "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp"  --blacklist "0" -e 10000 -s 4 --search-type 3 --max-seqs 4000
+"${MMSEQS}" easy-taxonomy "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -k 14 --blacklist "0" -e 10000 -s 4 --search-type 3 --max-seqs 100
 
 
 # Check numbers in taxreport
@@ -36,7 +36,7 @@ R_BACTERIA=$(grep 'superkingdom.*Bacteria' "$RESULTS/results_aln_report" | cut -
 R_VIRUS=$(grep 'superkingdom.*Virus' "$RESULTS/results_aln_report" | cut -f 2)
 R_EUKARYOTA=$(grep 'superkingdom.*Eukaryota' "$RESULTS/results_aln_report" | cut -f 2)
 
-TARGET="from taxonomyreport: 2650 251 2583"
+TARGET="from taxonomyreport: 2580 255 2629"
 ACTUAL="from taxonomyreport: $R_BACTERIA $R_VIRUS $R_EUKARYOTA"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
