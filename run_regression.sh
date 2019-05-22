@@ -38,8 +38,8 @@ time "${SCRIPTS}/run_nuclnucl_linsearch.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR
 time "${SCRIPTS}/run_cluster_update.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST_UPDATE"; TESTS="LINCLUST_UPDATE ${TESTS}"
 # time "${SCRIPTS}/run_multihit.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MULTHIT"; TESTS="MULTHIT ${TESTS}"
 time "${SCRIPTS}/run_easynuclnucltax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASYNUCLNUCLTAX_SEARCH"; TESTS="EASYNUCLNUCLTAX_SEARCH ${TESTS}"
-#time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
-#time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
+time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
+time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
 set -e
 
