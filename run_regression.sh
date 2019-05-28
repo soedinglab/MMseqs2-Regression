@@ -40,6 +40,7 @@ time "${SCRIPTS}/run_cluster_update.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LIN
 time "${SCRIPTS}/run_easynuclnucltax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASYNUCLNUCLTAX_SEARCH"; TESTS="EASYNUCLNUCLTAX_SEARCH ${TESTS}"
 time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
 time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
+time "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/APPLY"; TESTS="APPLY ${TESTS}"
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
 set -e
 
