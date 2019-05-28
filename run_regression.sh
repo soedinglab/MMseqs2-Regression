@@ -1,6 +1,6 @@
 #!/bin/sh -e
 MMSEQS="${1}"
-RESULTS="${2}"
+RESULTS="$(dirname "$( (readlink -f -- "$2" 2>/dev/null) || (greadlink -f -- "$2") )")"
 mkdir -p "${RESULTS}"
 
 BASE="$(dirname "$( (readlink -f -- "$0" 2>/dev/null) || (greadlink -f -- "$0") )")"
