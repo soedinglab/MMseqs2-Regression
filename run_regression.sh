@@ -42,6 +42,21 @@ time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${
 time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
 time "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/APPLY"; TESTS="APPLY ${TESTS}"
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
+
+case "$("${MMSEQS}" version)" in
+	*MPI)
+		export RUNNER="mpirun -np 1"
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_TARGET_SPLIT_NP1" 0; TESTS="MPI_TARGET_SPLIT_NP1 ${TESTS}"
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_QUERY_SPLIT_NP1" 1; TESTS="MPI_QUERY_SPLIT_NP1 ${TESTS}"
+		export RUNNER="mpirun -np 3"
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_TARGET_SPLIT_NP3" 0; TESTS="MPI_TARGET_SPLIT_NP3 ${TESTS}"
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_QUERY_SPLIT_NP3" 1; TESTS="MPI_QUERY_SPLIT_NP3 ${TESTS}"
+		unset RUNNER
+		;;
+	*)
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_TARGET_SPLIT" 0; TESTS="NOMPI_TARGET_SPLIT ${TESTS}"
+esac
+
 set -e
 
 printf "\n"
