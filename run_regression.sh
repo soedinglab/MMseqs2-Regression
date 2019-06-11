@@ -48,13 +48,18 @@ case "$("${MMSEQS}" version)" in
 		export RUNNER="mpirun -np 1"
 		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_TARGET_SPLIT_NP1" 0; TESTS="MPI_TARGET_SPLIT_NP1 ${TESTS}"
 		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_QUERY_SPLIT_NP1" 1; TESTS="MPI_QUERY_SPLIT_NP1 ${TESTS}"
+		time "${SCRIPTS}/run_slicetechnical.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_SLICE_TECH_NP1"; TESTS="MPI_SLICE_TECH_NP1 ${TESTS}"
+		
 		export RUNNER="mpirun -np 3"
 		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_TARGET_SPLIT_NP3" 0; TESTS="MPI_TARGET_SPLIT_NP3 ${TESTS}"
 		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_QUERY_SPLIT_NP3" 1; TESTS="MPI_QUERY_SPLIT_NP3 ${TESTS}"
+		time "${SCRIPTS}/run_slicetechnical.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MPI_SLICE_TECH_NP3"; TESTS="MPI_SLICE_TECH_NP3 ${TESTS}"
+		
 		unset RUNNER
 		;;
 	*)
 		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_TARGET_SPLIT" 0; TESTS="NOMPI_TARGET_SPLIT ${TESTS}"
+		time "${SCRIPTS}/run_slicetechnical.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_SLICE_TECH"; TESTS="NOMPI_SLICE_TECH ${TESTS}"
 esac
 
 set -e
