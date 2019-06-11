@@ -3,8 +3,6 @@ MMSEQS="${1}"
 DATADIR="${2}"
 RESULTS="${3}"
 
-echo "ELI"
-
 mkdir -p "${RESULTS}"
 cd "${RESULTS}"
 
