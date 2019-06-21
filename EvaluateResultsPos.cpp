@@ -9,11 +9,6 @@
 #include <iomanip>
 #include <algorithm>
 
-extern "C" {
-#include "ffindex.h"
-#include "ffutil.h"
-}
-
 #include "PatternCompiler.h"
 #include "EvaluateResults.h"
 #include "kseq.h"

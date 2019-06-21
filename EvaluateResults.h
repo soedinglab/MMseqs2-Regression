@@ -82,7 +82,9 @@ struct sortFalsePositvesByEval {
     }
 };
 
+#ifdef HAVE_FFINDEX
 void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pair<std::string,double>> & resultVector);
+#endif
 
 void parseM8(std::string query, std::string resFileName, std::vector<std::pair<std::string, double>> &resultVector, double resSize);
 

@@ -10,10 +10,12 @@
 #include <algorithm>
 #include <getopt.h>
 
+#ifdef HAVE_FFINDEX
 extern "C" {
 #include "ffindex.h"
 #include "ffutil.h"
 }
+#endif
 
 #include "PatternCompiler.h"
 #include "EvaluateResults.h"
@@ -285,6 +287,7 @@ void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> & hits) {
     outFile.close();
 }
 
+#ifdef HAVE_FFINDEX
 void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pair<std::string,double>> & resultVector) {
     static bool isReadIn = false;
     static char * data = NULL;
@@ -325,6 +328,7 @@ void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pa
         resultVector.push_back(std::make_pair(tmpRes[i], atof(tmpRes[i+5].c_str())));
     }
 }
+#endif
 
 void parseM8(std::string query, std::string resFileName, std::vector<std::pair<std::string, double>> &resultVector, double resSize) {
     static bool isReadIn = false;
@@ -380,7 +384,12 @@ std::vector<std::pair<std::string, double>> readResultFile(std::string query, st
     std::vector<std::pair<std::string, double>> resultVector;
     std::string extension = resFileName.substr(resFileName.find_last_of(".") + 1);
     if(extension.compare("index") == 0) { // MMSeqs
+#ifdef HAVE_FFINDEX
         parseMMseqs(query, resFileName, resultVector);
+#else
+        std::cerr << "Compiled without FFindex support";
+        exit(1);
+#endif
     } else if (extension.compare("m8") == 0){
         parseM8(query, resFileName, resultVector, resSize);
     }
