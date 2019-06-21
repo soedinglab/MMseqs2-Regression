@@ -7,7 +7,7 @@ BASE="$(dirname "$( (readlink -f -- "$0" 2>/dev/null) || (greadlink -f -- "$0") 
 cd "${BASE}"
 
 # build the benchmark tools
-(mkdir -p build && cd build && cmake -DHAVE_MPI=0 -DHAVE_FFINDEX=0 -DCMAKE_BUILD_TYPE=Release .. && make -j4)
+(mkdir -p build && cd build && cmake -DHAVE_FFINDEX=0 -DCMAKE_BUILD_TYPE=Release .. && make -j4)
 
 DATADIR="${BASE}/data"
 SCRIPTS="${BASE}/regression"

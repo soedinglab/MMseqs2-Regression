@@ -2,7 +2,7 @@
 // Created by mad on 9/22/15.
 //
 #include "EvaluateResults.h"
-#include <stddef.h>
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
