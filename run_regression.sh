@@ -1,6 +1,6 @@
 #!/bin/sh -e
 MMSEQS="${1}"
-RESULTS="$(dirname "$( (readlink -f -- "$2" 2>/dev/null) || (greadlink -f -- "$2") )")"
+RESULTS="$( (readlink -f -- "$2" 2>/dev/null) || (greadlink -f -- "$2") )"
 mkdir -p "${RESULTS}"
 
 BASE="$(dirname "$( (readlink -f -- "$0" 2>/dev/null) || (greadlink -f -- "$0") )")"
@@ -12,6 +12,7 @@ cd "${BASE}"
 DATADIR="${BASE}/data"
 SCRIPTS="${BASE}/regression"
 EVALUATE="${BASE}/build/evaluate_results"
+SAMTOOLS="${BASE}/samtools/samtools.sh"
 
 TESTS=""
 # continue on if one test fails
