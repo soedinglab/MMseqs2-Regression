@@ -30,7 +30,7 @@ do
 	# run slice search #
 	"${MMSEQS}" search ../"${PROTEINS_DB}" ../"${PROFILES_DB}" res tmpFolder --slice-search -s 1 --disk-space-limit "${DISK_SPACE_LIMIT_KB}K" --split-mode "${SPLIT_MODE}"
 	"${MMSEQS}" convertalis ../"${PROTEINS_DB}" ../"${PROFILES_DB}" res alis
-	awk '{print $1}' alis | sort | uniq -c | sort -nr | awk -v ORS=, '{ print $1 }' | sed 's/,$/\n/' > final_counts.txt
+	awk '{print $1}' alis | sort | uniq -c | sort -nr | awk '{ print $1 }' | paste -d, -s - > final_counts.txt
 	COUNTS_CURR_TEST="$(cat < final_counts.txt)"
 	echo "$COUNTS_CURR_TEST"
 	if [ "$COUNTS_CURR_TEST" != "$FINAL_COUNTS_AS_SHOULD" ]; then
