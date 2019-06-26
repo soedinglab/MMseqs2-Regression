@@ -9,6 +9,7 @@ cd "${RESULTS}"
 # create profiles db from fasta #
 "${MMSEQS}" createdb "${DATADIR}/five_profiles.fasta" prof_5
 "${MMSEQS}" mergedbs prof_5 prof_5_fasta prof_5_h prof_5 --prefixes ">"
+awk 'BEGIN { printf("%c%c%c%c",11,0,0,0); exit; }' > prof_5_fasta.dbtype
 "${MMSEQS}" msa2profile prof_5_fasta five_profiles --filter-msa 0
 
 # create db from duplicated query #

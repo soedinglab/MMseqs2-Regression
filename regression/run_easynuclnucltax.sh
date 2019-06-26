@@ -27,8 +27,8 @@ ln -sf "${TARGETDB}.lookup" "${TARGETDB}_nucl.lookup"
 
 TARGETDB_MAPPING="${DATADIR}/targetannotation.mapping"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
-"${MMSEQS}" createtaxdb "${TARGETDB}_nucl" "${TARGETDB_MAPPING}" "${DATADIR}/ncbitax" "$RESULTS/tmp"  
-"${MMSEQS}" easy-taxonomy "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -k 14 --blacklist "0" -e 10000 -s 4 --search-type 3 --max-seqs 100
+"${MMSEQS}" createtaxdb "${TARGETDB}_nucl" "$RESULTS/tmp" --ncbi-tax-dump "${DATADIR}/ncbitax" --tax-mapping-file "${TARGETDB_MAPPING}" 
+"${MMSEQS}" easy-taxonomy "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" --remove-tmp-files 0 -k 14 --blacklist "0" -e 10000 -s 4 --search-type 3 --max-seqs 100
 
 
 # Check numbers in taxreport
