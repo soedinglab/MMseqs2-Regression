@@ -29,6 +29,7 @@ time "${SCRIPTS}/run_nuclnucl_translated.sh" "${MMSEQS}" "${SAMTOOLS}" "${EVALUA
 time "${SCRIPTS}/run_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/CLUSTER"; TESTS="CLUSTER ${TESTS}"
 time "${SCRIPTS}/run_easy_cluster.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/EASY_CLUSTER"; TESTS="EASY_CLUSTER ${TESTS}"
 time "${SCRIPTS}/run_linclust.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST"; TESTS="LINCLUST ${TESTS}"
+time "${SCRIPTS}/run_linclust_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST_SPLIT"; TESTS="LINCLUST_SPLIT ${TESTS}"
 time "${SCRIPTS}/run_easy_linclust.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/EASY_LINCLUST"; TESTS="EASY_LINCLUST ${TESTS}"
 time "${SCRIPTS}/run_protnucl.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/PROTNUCL_SEARCH"; TESTS="PROTNUCL_SEARCH ${TESTS}"
 time "${SCRIPTS}/run_nuclprottax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/NUCLPROTTAX_SEARCH"; TESTS="NUCLPROTTAX_SEARCH ${TESTS}"
