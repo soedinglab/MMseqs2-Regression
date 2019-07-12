@@ -43,6 +43,8 @@ time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${
 time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
 time "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/APPLY"; TESTS="APPLY ${TESTS}"
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
+time "${SCRIPTS}/run_index_compatible.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/INDEX_COMPATIBLE"; TESTS="INDEX_COMPATIBLE ${TESTS}"
+
 
 case "$("${MMSEQS}" version)" in
 	*MPI)
