@@ -10,13 +10,6 @@
 #include <algorithm>
 #include <getopt.h>
 
-#ifdef HAVE_FFINDEX
-extern "C" {
-#include "ffindex.h"
-#include "ffutil.h"
-}
-#endif
-
 #include "PatternCompiler.h"
 #include "EvaluateResults.h"
 #include "kseq.h"
@@ -287,49 +280,6 @@ void writeAnnoatedResultFile(std::string resultFile, std::vector<Hits> & hits) {
     outFile.close();
 }
 
-#ifdef HAVE_FFINDEX
-void parseMMseqs(std::string query, std::string resFileName, std::vector<std::pair<std::string,double>> & resultVector) {
-    static bool isReadIn = false;
-    static char * data = NULL;
-    static ffindex_index_t * index = NULL;
-    if(isReadIn == false){
-        int lastindex = resFileName.find_last_of(".");
-        std::string dataFile = resFileName.substr(0, lastindex);
-        FILE * dataFP = fopen(dataFile.c_str(), "r");
-        size_t dataSize;
-        data = ffindex_mmap_data(dataFP, &dataSize);
-        FILE * indexFile = fopen(resFileName.c_str(), "r");
-        std::ifstream index_file(resFileName);
-        size_t cnt = 0;
-        if (index_file.is_open()) {
-            std::string line;
-            while ( std::getline(index_file, line)){
-                cnt++;
-            }
-            index_file.close();
-        }
-        std::cout <<"Parse ffindex" <<std::endl;
-        index = ffindex_index_parse(indexFile, cnt);
-        isReadIn = true;
-    }
-
-    if(isReadIn == false){
-        std::cout << "Readin of mmseqs results did not work" << std::endl;
-    }
-
-    PatternCompiler keyRegex("[^[:space:]]+");
-    ffindex_entry_t * entry = ffindex_bsearch_get_entry(index, (char *) query.c_str());
-    char * result = ffindex_get_data_by_entry(data, entry);
-    std::vector<std::string> tmpRes = keyRegex.getAllMatches(result, entry->length);
-    for(size_t i = 0; i < tmpRes.size(); i+=6){
-        if(tmpRes[i].c_str()[0] == '\0') {
-            break;
-        }
-        resultVector.push_back(std::make_pair(tmpRes[i], atof(tmpRes[i+5].c_str())));
-    }
-}
-#endif
-
 void parseM8(std::string query, std::string resFileName, std::vector<std::pair<std::string, double>> &resultVector, double resSize) {
     static bool isReadIn = false;
     static std::map<std::string, std::vector<std::pair<std::string, double>>> resLookup;
@@ -383,19 +333,9 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
 std::vector<std::pair<std::string, double>> readResultFile(std::string query, std::string resFileName, double resSize) {
     std::vector<std::pair<std::string, double>> resultVector;
     std::string extension = resFileName.substr(resFileName.find_last_of(".") + 1);
-    if(extension.compare("index") == 0) { // MMSeqs
-#ifdef HAVE_FFINDEX
-        parseMMseqs(query, resFileName, resultVector);
-#else
-        std::cerr << "Compiled without FFindex support";
-        exit(1);
-#endif
-    } else if (extension.compare("m8") == 0){
-        parseM8(query, resFileName, resultVector, resSize);
-    }
+    parseM8(query, resFileName, resultVector, resSize);
     return resultVector;
 }
-
 
 void printProgress(int id){
     if (id % 1000000 == 0 && id > 0){
@@ -679,3 +619,4 @@ std::vector <std::string> split(const std::string& str, const std::string& delim
     tokens.push_back(str.substr(lastPos, str.size() - lastPos));
     return tokens;
 }
+
