@@ -63,8 +63,8 @@ case "$("${MMSEQS}" version)" in
 		unset RUNNER
 		;;
 	*)
-	#	time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_TARGET_SPLIT" 0; TESTS="NOMPI_TARGET_SPLIT ${TESTS}"
-	#	time "${SCRIPTS}/run_slicetechnical.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_SLICE_TECH"; TESTS="NOMPI_SLICE_TECH ${TESTS}"
+		time "${SCRIPTS}/run_split.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_TARGET_SPLIT" 0; TESTS="NOMPI_TARGET_SPLIT ${TESTS}"
+		time "${SCRIPTS}/run_slicetechnical.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/NOMPI_SLICE_TECH"; TESTS="NOMPI_SLICE_TECH ${TESTS}"
 esac
 
 set -e
