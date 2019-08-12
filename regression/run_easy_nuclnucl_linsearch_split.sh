@@ -24,8 +24,7 @@ ln -sf "${TARGETDB}_h.index" "${TARGETDB}_nucl_h.index"
 ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 
 "${MMSEQS}" createlinindex "${TARGETDB}_nucl" "$RESULTS/tmp"  --search-type 3 
-"${MMSEQS}" easy-linsearch "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/tmp" -e 10000 --kmer-per-seq 200  --split-memory-limit 4M --search-type 3 -a 
-"${MMSEQS}" convertalis "${QUERYDB}_nucl" "${TARGETDB}_nucl" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
+"${MMSEQS}" easy-linsearch "${QUERYDB}_nucl.fasta" "${TARGETDB}_nucl" "$RESULTS/results_aln.m8" "$RESULTS/tmp" -e 10000 --kmer-per-seq 200  --split-memory-limit 4M --search-type 3 -a 
 
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
 ACTUAL=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
