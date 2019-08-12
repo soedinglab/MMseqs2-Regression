@@ -39,15 +39,13 @@ time "${SCRIPTS}/run_nuclnucl_linsearchtranslated.sh" "${MMSEQS}" "${SAMTOOLS}" 
 time "${SCRIPTS}/run_nuclnucl_linsearch.sh" "${MMSEQS}" "${SAMTOOLS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/LINSEARCH_NUCLNUCL_SEARCH"; TESTS="LINSEARCH_NUCLNUCL_SEARCH ${TESTS}"
 time "${SCRIPTS}/run_easy_nuclnucl_linsearch_split.sh" "${MMSEQS}" "${SAMTOOLS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_LINSEARCH_NUCLNUCL_SEARCH_SPLIT"; TESTS="/EASY_LINSEARCH_NUCLNUCL_SEARCH_SPLIT ${TESTS}"
 time "${SCRIPTS}/run_cluster_update.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/LINCLUST_UPDATE"; TESTS="LINCLUST_UPDATE ${TESTS}"
-time "${SCRIPTS}/run_easy_cluster_reassign.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/CLUSTER_REASSIGN"; TESTS="CLUSTER_REASSIGN ${TESTS}"
 # time "${SCRIPTS}/run_multihit.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MULTHIT"; TESTS="MULTHIT ${TESTS}"
-#time "${SCRIPTS}/run_easynuclnucltax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASYNUCLNUCLTAX_SEARCH"; TESTS="EASYNUCLNUCLTAX_SEARCH ${TESTS}"
-#time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
-#time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
-#time "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/APPLY"; TESTS="APPLY ${TESTS}"
+time "${SCRIPTS}/run_easynuclnucltax.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASYNUCLNUCLTAX_SEARCH"; TESTS="EASYNUCLNUCLTAX_SEARCH ${TESTS}"
+time "${SCRIPTS}/run_extractorfs.sh" "${MMSEQS}" "${SCRIPTS}/extractorfs.pl" "${SCRIPTS}/compare_frags.pl" "${DATADIR}" "${RESULTS}/EXTRACTORFS"; TESTS="EXTRACTORFS ${TESTS}"
+time "${SCRIPTS}/run_rbh.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/RBH"; TESTS="RBH ${TESTS}"
+time "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/APPLY"; TESTS="APPLY ${TESTS}"
 # time "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"; TESTS="CSPROFILE ${TESTS}"
-#time "${SCRIPTS}/run_index_compatible.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/INDEX_COMPATIBLE"; TESTS="INDEX_COMPATIBLE ${TESTS}"
-
+time "${SCRIPTS}/run_index_compatible.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/INDEX_COMPATIBLE"; TESTS="INDEX_COMPATIBLE ${TESTS}"
 
 case "$("${MMSEQS}" version)" in
 	*MPI)
