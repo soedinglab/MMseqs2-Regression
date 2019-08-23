@@ -45,6 +45,7 @@ set +e
 
 run_test SEARCH "${SCRIPTS}/run_search.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/SEARCH"
 run_test EASY_SEARCH "${SCRIPTS}/run_easy_search.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_SEARCH"
+run_test EASY_SEARCH_INDEX_SPLIT "${SCRIPTS}/run_easy_search_index_split.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_SEARCH_INDEX_SPLIT"
 run_test PROFILE "${SCRIPTS}/run_profile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/PROFILE"
 run_test EASY_PROFILE "${SCRIPTS}/run_easy_profile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_PROFILE"
 run_test SLICEPROFILE "${SCRIPTS}/run_sliceprofile.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/SLICEPROFILE"
