@@ -8,7 +8,7 @@ mkdir -p "${RESULTS}"
 QUERY="${DATADIR}/query.fasta"
 QUERYDB="${RESULTS}/query"
 "${MMSEQS}" createdb "${QUERY}" "${QUERYDB}"
-"${MMSEQS}" translateaa "${QUERYDB}" "${QUERYDB}_nucl"
+"${MMSEQS}" translateaa "${QUERYDB}" "${QUERYDB}_nucl" --threads 1
 ln -sf "${QUERYDB}_h" "${QUERYDB}_nucl_h"
 ln -sf "${QUERYDB}_h.index" "${QUERYDB}_nucl_h.index"
 ln -sf "${QUERYDB}_h.dbtype" "${QUERYDB}_nucl_h.dbtype"

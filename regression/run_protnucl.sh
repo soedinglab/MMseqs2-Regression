@@ -12,7 +12,7 @@ QUERYDB="${RESULTS}/query"
 TARGET="${DATADIR}/targetannotation.fasta"
 TARGETDB="${RESULTS}/targetannotation"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
-"${MMSEQS}" translateaa "${TARGETDB}" "${TARGETDB}_nucl"
+"${MMSEQS}" translateaa "${TARGETDB}" "${TARGETDB}_nucl" --threads 1
 ln -sf "${TARGETDB}_h" "${TARGETDB}_nucl_h"
 ln -sf "${TARGETDB}_h.index" "${TARGETDB}_nucl_h.index"
 ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
