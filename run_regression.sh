@@ -15,6 +15,7 @@ abspath() {
 
 MMSEQS="$(abspath "$1")"
 RESULTS="$(abspath "$2")"
+RUN_ONLY="${3:-""}"
 
 mkdir -p "${RESULTS}"
 
@@ -32,6 +33,9 @@ SAMTOOLS="${BASE}/samtools/samtools.sh"
 TESTS=""
 run_test() {
 	NAME="$1"
+    if [ ! -z "$RUN_ONLY" ] && [ X"$RUN_ONLY" != X"$NAME" ]; then
+        return
+    fi
 	TESTS="${TESTS} ${NAME}"
 	shift
 	START="$(date +%s)"
