@@ -46,7 +46,6 @@ run_test() {
 
 # continue on if one test fail
 set +e
-
 run_test SEARCH "${SCRIPTS}/run_search.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/SEARCH"
 run_test EASY_SEARCH "${SCRIPTS}/run_easy_search.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_SEARCH"
 run_test EASY_SEARCH_INDEX_SPLIT "${SCRIPTS}/run_easy_search_index_split.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/EASY_SEARCH_INDEX_SPLIT"
@@ -77,7 +76,7 @@ run_test APPLY "${SCRIPTS}/run_apply.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/AP
 run_test INDEX_COMPATIBLE "${SCRIPTS}/run_index_compatible.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/INDEX_COMPATIBLE"
 # run_test MULTHIT "${SCRIPTS}/run_multihit.sh" "${MMSEQS}" "${DATADIR}" "${RESULTS}/MULTHIT"
 # run_test CSPROFILE "${SCRIPTS}/run_profilestates.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/CSPROFILE"
-
+run_test PREF_DB_LOAD_MODE "${SCRIPTS}/run_prefilter_db_load_mode.sh" "${MMSEQS}" "${EVALUATE}" "${DATADIR}" "${RESULTS}/PREF_DB_LOAD_MODE"
 case "$("${MMSEQS}" version)" in
 	*MPI)
 		export RUNNER="mpirun -np 1"
