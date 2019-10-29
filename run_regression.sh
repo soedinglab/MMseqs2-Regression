@@ -38,23 +38,23 @@ run_test() {
     echo "Test needs at least 2 parameters!"
     exit 1
   fi
-	NAME="$1"
+  NAME="$1"
   FILE="$2"
   shift
   shift
   if [ ! -z "$RUN_ONLY" ] && [ X"$RUN_ONLY" != X"$NAME" ]; then
     return
   fi
-	TESTS="${TESTS} ${NAME}"
+  TESTS="${TESTS} ${NAME}"
   export RESULTS="${SCRATCH}/${NAME}"
   mkdir -p "${RESULTS}"
-	START="$(date +%s)"
-	"${SCRIPTS}/${FILE}" "$@"
-	STATUS="$?"
-	END="$(date +%s)"
-	if [ "${STATUS}" != "0" ] || [ "$(echo $(head "${RESULTS}.report"))" != "GOOD"]; then
-	  rm -rf "${RESULTS}"
-	fi
+  START="$(date +%s)"
+  "${SCRIPTS}/${FILE}" "$@"
+  STATUS="$?"
+  END="$(date +%s)"
+  if [ "${STATUS}" != "0" ] || [ "$(echo $(head -n 1 "${RESULTS}.report"))" != "GOOD" ]; then
+    rm -rf "${RESULTS}"
+  fi
   eval "${NAME}_TIME"="$((END-START))"
 }
 
