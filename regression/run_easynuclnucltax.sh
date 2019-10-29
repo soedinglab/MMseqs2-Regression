@@ -1,10 +1,4 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-EVALUATE="${2}"
-DATADIR="${3}"
-RESULTS="${4}"
-mkdir -p "${RESULTS}"
-
 QUERY="${DATADIR}/query.fasta"
 QUERYDB="${RESULTS}/query"
 "${MMSEQS}" createdb "${QUERY}" "${QUERYDB}"
@@ -40,4 +34,4 @@ TARGET="from taxonomyreport: 2590 238 2640"
 ACTUAL="from taxonomyreport: $R_BACTERIA $R_VIRUS $R_EUKARYOTA"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
-    print "Actual:   ", actual; }' > "${RESULTS}/report"
+    print "Actual:   ", actual; }' > "${RESULTS}.report"

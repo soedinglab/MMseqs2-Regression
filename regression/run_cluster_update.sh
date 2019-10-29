@@ -1,9 +1,4 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-DATADIR="${2}"
-RESULTS="${3}"
-mkdir -p "${RESULTS}"
-
 SEQCLUDB1="${RESULTS}/clu1"
 SEQCLUDB2="${RESULTS}/clu2"
 awk 'NR%4==0 || NR%4==1{print}' "${DATADIR}/clu.fasta" > "$RESULTS/clu1.fasta"
@@ -25,4 +20,4 @@ TARGET="32130 17406 32130"
 ACTUAL="$CLUSTERMEMEBER $CLUSTER $UPDATEDSEQCNT"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
-    print "Actual:   ", actual; }' > "${RESULTS}/report"
+    print "Actual:   ", actual; }' > "${RESULTS}.report"

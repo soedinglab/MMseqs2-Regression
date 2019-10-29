@@ -1,10 +1,4 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-EVALUATE="${2}"
-DATADIR="${3}"
-RESULTS="${4}"
-mkdir -p "${RESULTS}"
-
 QUERY="${DATADIR}/query.fasta"
 QUERYDB="${RESULTS}/query"
 "${MMSEQS}" createdb "${QUERY}" "${QUERYDB}"
@@ -32,4 +26,4 @@ ACTUAL3=$("${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/pref.m8" "${RESULTS}/evalua
 TARGET="0.085"
 awk -v actual1="$ACTUAL1" -v actual2="$ACTUAL2" -v actual3="$ACTUAL3" -v target="$TARGET" \
     'BEGIN { print (actual1 >= target && actual1 == actual2 && actual1 == actual3) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual1; }' \
-    > "${RESULTS}/report"
+    > "${RESULTS}.report"

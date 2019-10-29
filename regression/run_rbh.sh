@@ -1,9 +1,4 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-DATADIR="${2}"
-RESULTS="${3}"
-mkdir -p "${RESULTS}"
-
 # rbh test
 # RBHproteinsA.fas has 6 sequences
 # RBHproteinsB.fas has 6 sequences
@@ -31,4 +26,4 @@ ACTUAL="$((TOTAL_NUM_LINES+NUM_GOOD_MATCHES))"
 TARGET="10"
 awk -v actual="$ACTUAL" -v target="$TARGET" \
     'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-    > "${RESULTS}/report"
+    > "${RESULTS}.report"

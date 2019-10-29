@@ -1,9 +1,4 @@
 #!/bin/sh
-MMSEQS="${1}"
-DATADIR="${2}"
-RESULTS="${3}"
-mkdir -p "${RESULTS}"
-
 "${MMSEQS}" createdb "${DATADIR}/query.fasta" "${RESULTS}/query"
 "${MMSEQS}" createdb "${DATADIR}/dna.fas" "${RESULTS}/dna"
 
@@ -43,5 +38,5 @@ done
 
 awk -v actual="$FAIL" -v target="0" \
     'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-    > "${RESULTS}/report"
+    > "${RESULTS}.report"
 

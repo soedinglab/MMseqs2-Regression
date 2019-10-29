@@ -1,12 +1,7 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-DATADIR="${2}"
-RESULTS="${3}"
-SPLIT_MODE="${4}"
+SPLIT_MODE="${1}"
 
 NUM_RES_LINES_BASELINE=500
-
-mkdir -p "${RESULTS}"
 head -n $((NUM_RES_LINES_BASELINE*2)) "${DATADIR}/query.fasta" > "${RESULTS}/500prots.fasta"
 "${MMSEQS}" createdb "${RESULTS}/500prots.fasta" "${RESULTS}/prots" --dbtype 0
 
@@ -26,5 +21,4 @@ done
 # if ALL tests passed - GOOD, otherwise - BAD
 awk -v actual="$NUM_LINES_ALL_TESTS" -v target="$NUM_RES_LINES_BASELINE" \
 	'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-	> "${RESULTS}/report"
-
+	> "${RESULTS}.report"

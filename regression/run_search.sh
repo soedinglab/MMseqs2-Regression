@@ -1,10 +1,4 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-EVALUATE="${2}"
-DATADIR="${3}"
-RESULTS="${4}"
-mkdir -p "${RESULTS}"
-
 QUERY="${DATADIR}/query.fasta"
 QUERYDB="${RESULTS}/query"
 "${MMSEQS}" createdb "${QUERY}" "${QUERYDB}"
@@ -23,4 +17,4 @@ ACTUAL=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
 TARGET="0.238"
 awk -v actual="$ACTUAL" -v target="$TARGET" \
     'BEGIN { print (actual >= target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-    > "${RESULTS}/report"
+    > "${RESULTS}.report"

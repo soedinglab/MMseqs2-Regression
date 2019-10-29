@@ -1,10 +1,5 @@
 #!/bin/sh -e
-MMSEQS="${1}"
-DATADIR="${2}"
-RESULTS="${3}"
-
-mkdir -p "${RESULTS}"
-# create profiles db from fasta #
+# create profiles db from fasta
 "${MMSEQS}" createdb "${DATADIR}/five_profiles.fasta" "${RESULTS}/prof_5"
 "${MMSEQS}" mergedbs "${RESULTS}/prof_5" "${RESULTS}/prof_5_fasta" "${RESULTS}/prof_5_h" "${RESULTS}/prof_5" --prefixes ">"
 awk 'BEGIN { printf("%c%c%c%c",11,0,0,0); exit; }' > "${RESULTS}/prof_5_fasta.dbtype"
@@ -37,4 +32,4 @@ done
 # if ALL tests passed - GOOD, otherwise - BAD
 awk -v actual="$COUNTS_ALL_TESTS" -v target="$FINAL_COUNTS_AS_SHOULD" \
 	'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
-	> "${RESULTS}/report"
+	> "${RESULTS}.report"
