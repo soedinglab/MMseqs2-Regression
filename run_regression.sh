@@ -52,7 +52,7 @@ run_test() {
   "${SCRIPTS}/${FILE}" "$@"
   STATUS="$?"
   END="$(date +%s)"
-  if [ "${STATUS}" != "0" ] || [ "$(echo $(head -n 1 "${RESULTS}.report"))" != "GOOD" ]; then
+  if [ "${STATUS}" == "0" ] && [ "$(echo $(head -n 1 "${RESULTS}.report"))" == "GOOD" ]; then
     rm -rf "${RESULTS}"
   fi
   eval "${NAME}_TIME"="$((END-START))"
