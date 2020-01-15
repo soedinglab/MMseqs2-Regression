@@ -16,7 +16,7 @@ CLUSTERMEMEBER=$(wc -l "$RESULTS/clu_updated" | awk '{print $1}')
 CLUSTER=$(wc -l "$RESULTS/clu_updated.index" | awk '{print $1}')
 UPDATEDSEQCNT=$(wc -l "$RESULTS/seqdb_update" | awk '{print $1}')
 
-TARGET="32131 17362 32131"
+TARGET="32131 17357 32131"
 ACTUAL="$CLUSTERMEMEBER $CLUSTER $UPDATEDSEQCNT"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
