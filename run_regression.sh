@@ -90,7 +90,13 @@ run_test LINCLUST_UPDATE "run_cluster_update.sh"
 run_test EASYNUCLNUCLTAX_SEARCH "run_easynuclnucltax.sh"
 run_test EXTRACTORFS "run_extractorfs.sh"
 run_test RBH "run_rbh.sh"
-run_test APPLY "run_apply.sh"
+case "$(uname -s)" in
+    CYGWIN*|MINGW32*|MSYS*|MINGW*)
+        ;;
+    *)
+        run_test APPLY "run_apply.sh"
+        ;;
+esac
 run_test INDEX_COMPATIBLE "run_index_compatible.sh"
 # run_test MULTHIT "run_multihit.sh"
 run_test FILTERDB "run_filterdb.sh"
