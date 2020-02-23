@@ -2,11 +2,7 @@
 SELF="$( cd "$(dirname "$0")" ; pwd -P )"
 SUFFIX=""
 case "$(uname -m)" in
-  arm*|aarch*)
-   SUFFIX="-aarch64"
-   # upx is not working with samtools on aarch64
-   gunzip "$SELF/samtools-linux${SUFFIX}.gz"
-   ;;
+  arm*|aarch*) SUFFIX="-aarch64" ;;
 esac
 case "$(echo "$OSTYPE" | tr '[:upper:]' '[:lower:]')" in
   linux*) "$SELF/samtools-linux$SUFFIX" "$@" ;;
