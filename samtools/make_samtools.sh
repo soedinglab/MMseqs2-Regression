@@ -1,10 +1,13 @@
 #!/bin/sh -e
+# liblzma-dev libcurl4-openssl-dev autoconf upx-ucl
 git clone https://github.com/samtools/htslib.git
+(cd htslib; git checkout 6eacc77)
 git clone https://github.com/samtools/samtools.git
 cd samtools/
+git checkout 9415dc1
 autoheader
 autoconf -Wno-error
-./configure --enable-configure-htslib=yes --without-curses --disable-lzma --disable-bz2 CFLAGS="-Os"
+./configure --enable-configure-htslib=yes --without-curses --disable-lzma --disable-bz2 CFLAGS="-Os -static" LDFLAGS="-static"
 make -j
 
 if [ -e samtools.exe ]; then
