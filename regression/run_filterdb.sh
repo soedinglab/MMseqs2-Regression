@@ -12,7 +12,7 @@ expected_index() {
 "${MMSEQS}" filterdb "${RESULTS}/db" "${RESULTS}/filt" --sort-entries 2 --filter-column 1
 "${MMSEQS}" filterdb "${RESULTS}/filt" "${RESULTS}/filt_2" --extract-lines 1
 "${MMSEQS}" filterdb "${RESULTS}/filt_2" "${RESULTS}/filt_3" --comparison-operator ge --comparison-value 50 --filter-column 2
-expected_index "${RESULTS}/filt_3.index" 7 7 6 1
+expected_index "${RESULTS}/filt_3.index" 6 7 6 1
 
 "${MMSEQS}" filterdb "${RESULTS}/db"  "${RESULTS}/filt_4" --filter-file "${RESULTS}/db.index"
 expected_index "${RESULTS}/filt_4.index" 12 13 6 6
