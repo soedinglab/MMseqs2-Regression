@@ -23,7 +23,7 @@ ACTUAL2=$("${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/pref.m8" "${RESULTS}/evalua
 awk '{print $1"\t"$2"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"0"\t"$3"\t"0}' "$RESULTS/pref.tsv" | LC_ALL=C sort -k1,1 -k11,11g > "$RESULTS/pref.m8"
 ACTUAL3=$("${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/pref.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | grep "^ROC5 AUC:" | cut -d" " -f3)
 
-TARGET="0.085"
+TARGET="0.0856974"
 awk -v actual1="$ACTUAL1" -v actual2="$ACTUAL2" -v actual3="$ACTUAL3" -v target="$TARGET" \
     'BEGIN { print (actual1 >= target && actual1 == actual2 && actual1 == actual3) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual1; }' \
     > "${RESULTS}.report"
