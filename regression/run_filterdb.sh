@@ -33,7 +33,7 @@ expected_index "${RESULTS}/filt_8.index" 11 1 6 6
 expected_index "${RESULTS}/filt_9.index" 3 3 3 3
 
 "${MMSEQS}" filterdb "${RESULTS}/db"  "${RESULTS}/filt_10" --join-db "${RESULTS}/filt_9"
-expected_index "${RESULTS}/filt_10.index" 14 15 7 7
+expected_index "${RESULTS}/filt_10.index" 16 17 8 8
 
 "${MMSEQS}" filterdb "${RESULTS}/db"  "${RESULTS}/filt_11" --beats-first --comparison-operator ge
 expected_index "${RESULTS}/filt_11.index" 12 13 6 6
