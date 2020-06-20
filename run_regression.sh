@@ -56,6 +56,8 @@ run_test() {
      if [ -f "${RESULTS}.report" ] && [ "$(echo $(head -n 1 "${RESULTS}.report"))" = "GOOD" ]; then
         rm -rf "${RESULTS}"
      fi
+  else
+    dmesg | grep -E -i -B100 'killed process'
   fi
   eval "${NAME}_TIME"="$((END-START))"
 }
