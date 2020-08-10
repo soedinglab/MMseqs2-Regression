@@ -29,7 +29,7 @@ TARGET2="0.171723"
 "${MMSEQS}" convertalis "$QUERYDB" "$TARGETDB" "$RESULTS/results_merged" "$RESULTS/results_merged.m8"
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_merged.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
 ACTUAL3=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
-TARGET3="0.222102"
+TARGET3="0.222982"
 
 awk -v actual1="$ACTUAL1" -v target1="$TARGET1" -v actual2="$ACTUAL2" -v target2="$TARGET2" -v actual3="$ACTUAL3" -v target3="$TARGET3" \
     'BEGIN { print (actual1 >= target1 && actual2 >= target2 && actual3 >= target3) ? "GOOD" : "BAD"; print "Expected: "target1", "target2", "target3; print "Actual: "actual1", "actual2", "actual3; }' \
