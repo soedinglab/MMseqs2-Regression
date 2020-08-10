@@ -13,14 +13,14 @@ TARGETDB="${RESULTS}/targetannotation"
 "${MMSEQS}" convertalis "$QUERYDB" "$TARGETDB" "$RESULTS/results_ac" "$RESULTS/results_aln.m8"
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
 ACTUAL1=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
-TARGET1="0.165893"
+TARGET1="0.16614"
 
 "${MMSEQS}" expand2profile "$QUERYDB" "$TARGETDB" "$RESULTS/results_ab" "$RESULTS/results_bc" "$RESULTS/prof_ac"
 "${MMSEQS}" search "$RESULTS/prof_ac" "$TARGETDB" "$RESULTS/results_prof" "$RESULTS/tmp" -e 10000 -s 2 -a --max-seqs 4000
 "${MMSEQS}" convertalis "$QUERYDB" "$TARGETDB" "$RESULTS/results_prof" "$RESULTS/results_prof.m8"
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_prof.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
 ACTUAL2=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
-TARGET2="0.171563"
+TARGET2="0.171723"
 
 awk -v actual1="$ACTUAL1" -v target1="$TARGET1" -v actual2="$ACTUAL2" -v target2="$TARGET2" \
     'BEGIN { print (actual1 >= target1 && actual2 >= target2) ? "GOOD" : "BAD"; print "Expected: "target1", "target2; print "Actual: "actual1", "actual2; }' \
