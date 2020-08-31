@@ -10,13 +10,14 @@ cat "$RESULTS/clu1.fasta" "$RESULTS/clu2.fasta" > "$RESULTS/cluCombined.fasta"
 "${MMSEQS}" createdb "$RESULTS/cluCombined.fasta" "${SEQCLUDB2}"
 
 "${MMSEQS}" linclust "${SEQCLUDB1}" "$RESULTS/results_clu" "$RESULTS/tmp" --cov-mode 1 -a -c 0.50 --min-seq-id 0.50
-"${MMSEQS}" clusterupdate "${SEQCLUDB1}" "${SEQCLUDB2}" "$RESULTS/results_clu" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/tmp"
+"${MMSEQS}" clusterupdate "${SEQCLUDB1}" "${SEQCLUDB2}" "$RESULTS/results_clu" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/tmp" --cov-mode 1 -c 0.50 --min-seq-id 0.50
+"${MMSEQS}" createtsv "$RESULTS/seqdb_update" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/clu_updated.tsv"
 
-CLUSTERMEMEBER=$(wc -l "$RESULTS/clu_updated" | awk '{print $1}')
-CLUSTER=$(wc -l "$RESULTS/clu_updated.index" | awk '{print $1}')
-UPDATEDSEQCNT=$(wc -l "$RESULTS/seqdb_update" | awk '{print $1}')
+CLUSTERMEMEBER=$(wc -l "$RESULTS/clu_updated.tsv" | awk '{print $1}')
+CLUSTER=$(echo $(cut -f1 "$RESULTS/clu_updated.tsv" | sort -u | wc -l))
+UPDATEDSEQCNT=$(wc -l "$RESULTS/seqdb_update.index" | awk '{print $1}')
 
-TARGET="32132 17358 32132"
+TARGET="32132 24732 32132"
 ACTUAL="$CLUSTERMEMEBER $CLUSTER $UPDATEDSEQCNT"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
