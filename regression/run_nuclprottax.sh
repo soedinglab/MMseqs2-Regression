@@ -12,7 +12,7 @@ TARGETDB="${RESULTS}/targetannotation"
 TARGETDB_MAPPING="${DATADIR}/targetannotation.mapping"
 "${MMSEQS}" createdb "${TARGET}" "${TARGETDB}"
 "${MMSEQS}" createtaxdb "${TARGETDB}" "$RESULTS/tmp" --tax-mapping-file "${TARGETDB_MAPPING}" --ncbi-tax-dump "${DATADIR}/ncbitax" 
-"${MMSEQS}" taxonomy "${QUERYDB}_nucl" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" --lca-mode 3 --blacklist "0" -e 10000 -s 4 --max-seqs 4000
+"${MMSEQS}" taxonomy "${QUERYDB}_nucl" "$TARGETDB" "$RESULTS/results_aln" "$RESULTS/tmp" -e 0.1 -s 4
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_bacteria" --taxon-list 2 
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_virus" --taxon-list 10239
 "${MMSEQS}" filtertaxdb "${TARGETDB}" "$RESULTS/results_aln" "$RESULTS/results_aln_eukaryota" --taxon-list 2759 
@@ -29,7 +29,7 @@ R_BACTERIA=$(grep 'superkingdom.*Bacteria' "$RESULTS/results_aln_taxreport" | cu
 R_VIRUS=$(grep 'superkingdom.*Virus' "$RESULTS/results_aln_taxreport" | cut -f 2)
 R_EUKARYOTA=$(grep 'superkingdom.*Eukaryota' "$RESULTS/results_aln_taxreport" | cut -f 2)
 
-TARGET="from filtertaxdb: 2524 259 2713; from taxonomyreport: 2524 259 2713"
+TARGET="from filtertaxdb: 1023 181 1265; from taxonomyreport: 1023 181 1265"
 ACTUAL="from filtertaxdb: $BACTERIA $VIRUS $EUKARYOTA; from taxonomyreport: $R_BACTERIA $R_VIRUS $R_EUKARYOTA"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
