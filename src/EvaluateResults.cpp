@@ -288,29 +288,25 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
         size_t resSizeInt = resSize;
         std::ifstream infile(resFileName);
         std::string line;
-        PatternCompiler keyRegex("[^[:space:]]+");
-
-        while (std::getline(infile, line))
-        {
-            std::vector<std::string> tmpRes = keyRegex.getAllMatches(line.c_str(), line.size());
-            std::string key = tmpRes[0];
-            if(resLookup.find(key)== resLookup.end()) {
+        while (std::getline(infile, line)) {
+            std::vector<std::string> tmpRes = split(line, "\t");
+            std::string& key = tmpRes[0];
+            if(resLookup.find(key) == resLookup.end()) {
                 resLookup[key] = std::vector<std::pair<std::string, double>>();
             }
-            std::string targetkey = tmpRes[1];
-            std::string evalStr = tmpRes[10];
-            double eval = atof(evalStr.c_str());
             if(resLookup[key].size() < resSizeInt){
-                resLookup[key].push_back(std::make_pair(targetkey,eval));
+                std::string& targetkey = tmpRes[1];
+                std::string& evalStr = tmpRes[10];
+                double eval = strtod(evalStr.c_str(), NULL);
+                resLookup[key].emplace_back(targetkey, eval);
             }
         }
         infile.close();
         std::map<std::string, std::vector<std::pair<std::string, double>>>::iterator it;
 
-        for ( it = resLookup.begin(); it != resLookup.end(); it++ ) {
-            std::set<std::string> removeDub;
-            std::vector<std::pair<std::string, double>> single;
-
+        std::vector<std::pair<std::string, double>> single;
+        std::set<std::string> removeDub;
+        for (it = resLookup.begin(); it != resLookup.end(); it++ ) {
             for(size_t i = 0; i < it->second.size(); i++){
                 if(removeDub.find(it->second[i].first) == removeDub.end()){
                     single.push_back(it->second[i]);
@@ -320,7 +316,7 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
             it->second.clear();
             removeDub.clear();
             for(size_t i = 0; i < single.size(); i++){
-                it->second.push_back(single[i]);
+                it->second.emplace_back(single[i]);
             }
             single.clear();
         }
@@ -332,7 +328,6 @@ void parseM8(std::string query, std::string resFileName, std::vector<std::pair<s
 
 std::vector<std::pair<std::string, double>> readResultFile(std::string query, std::string resFileName, double resSize) {
     std::vector<std::pair<std::string, double>> resultVector;
-    std::string extension = resFileName.substr(resFileName.find_last_of(".") + 1);
     parseM8(query, resFileName, resultVector, resSize);
     return resultVector;
 }
@@ -352,7 +347,7 @@ void readFamDefFromFasta(std::string fasta_path, std::unordered_map<std::string,
                          std::unordered_map<std::string, size_t > &supFamSizeLookup, bool readEval) {
     size_t entries_num = 0;
 
-    PatternCompiler scopDomainRegex("[a-z]+\\.[0-9]+\\.[0-9]+\\.[0-9]+");
+    static PatternCompiler scopDomainRegex("[a-z]+\\.[0-9]+\\.[0-9]+\\.[0-9]+");
     std::set<std::string> scopSuperFam;
 
     FILE * fasta_file = fopen(fasta_path.c_str(), "r");
@@ -417,8 +412,8 @@ EvaluateResult evaluateResult(std::string query, std::vector<SCOP> *qScopIds,
     double ignore_cnt = 0.0;
     double auc = 0.0;
 
-    PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
-    PatternCompiler ignoreClass("^e\\..*");
+    static PatternCompiler ignore_superfam("^b\\.(67|68|69|70).*");
+    static PatternCompiler ignoreClass("^e\\..*");
 
 //    std::string qSupFam = qFam;
 //    qSupFam = qSupFam.erase(qSupFam.find_last_of("."), std::string::npos);
