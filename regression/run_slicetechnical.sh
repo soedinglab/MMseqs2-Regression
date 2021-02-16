@@ -18,8 +18,8 @@ for SPLIT_MODE in 0 1; do
 	DISK_SPACE_LIMIT_KB=17
 	SPLIT_OUTPUT="${RESULTS}/DSL_${DISK_SPACE_LIMIT_KB}K_SPLIT_MODE_${SPLIT_MODE}"
 	mkdir -p "${SPLIT_OUTPUT}"
-	# run slice search #
-	"${MMSEQS}" search "${RESULTS}/query_pow2" "${RESULTS}/five_profiles" "${SPLIT_OUTPUT}/res" "${SPLIT_OUTPUT}/tmpFolder" --slice-search -s 1 --disk-space-limit "${DISK_SPACE_LIMIT_KB}K" --split-mode "${SPLIT_MODE}"
+	# run exhaustive search #
+	"${MMSEQS}" search "${RESULTS}/query_pow2" "${RESULTS}/five_profiles" "${SPLIT_OUTPUT}/res" "${SPLIT_OUTPUT}/tmpFolder" --exhaustive-search -s 1 --disk-space-limit "${DISK_SPACE_LIMIT_KB}K" --split-mode "${SPLIT_MODE}"
 	"${MMSEQS}" convertalis "${RESULTS}/query_pow2" "${RESULTS}/five_profiles" "${SPLIT_OUTPUT}/res" "${SPLIT_OUTPUT}/alis"
 	awk '{print $1}' "${SPLIT_OUTPUT}/alis" | sort | uniq -c | sort -nr | awk '{ print $1 }' | paste -d, -s - > "${SPLIT_OUTPUT}/final_counts.txt"
 	COUNTS_CURR_TEST="$(cat < "${SPLIT_OUTPUT}/final_counts.txt")"

@@ -11,7 +11,7 @@ TARGETDB="${RESULTS}/targetannotation"
 awk 'BEGIN { printf("%c%c%c%c",11,0,0,0); exit; }' > "${TARGETDB}_fasta.dbtype"
 "${MMSEQS}" msa2profile "${TARGETDB}_fasta" "${TARGETDB}_profile" --filter-msa 0
 
-"${MMSEQS}" search "$QUERYDB" "${TARGETDB}_profile" "$RESULTS/results_aln" "$RESULTS/tmp" -s 1 --slice-search -e 10000
+"${MMSEQS}" search "$QUERYDB" "${TARGETDB}_profile" "$RESULTS/results_aln" "$RESULTS/tmp" -s 1 --exhaustive-search -e 10000
 "${MMSEQS}" convertalis "$QUERYDB" "${TARGETDB}_profile" "$RESULTS/results_aln" "$RESULTS/results_aln.m8"
 
 "${EVALUATE}" "$QUERY" "$TARGET" "$RESULTS/results_aln.m8" "${RESULTS}/evaluation_roc5.dat" 4000 1 | tee "${RESULTS}/evaluation.log"
