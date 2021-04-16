@@ -89,7 +89,7 @@ run_test LINSEARCH_NUCLNUCL_TARNS_SEARCH "run_nuclnucl_linsearchtranslated.sh"
 run_test LINSEARCH_NUCLNUCL_SEARCH "run_nuclnucl_linsearch.sh"
 run_test EASY_LINSEARCH_NUCLNUCL_SEARCH_SPLIT "run_easy_nuclnucl_linsearch_split.sh"
 run_test LINCLUST_UPDATE "run_cluster_update.sh"
-run_test EASYNUCLNUCLTAX_SEARCH "run_easynuclnucltax.sh"
+run_test EASYNUCLNUCLTAX_SEARCH "run_easy_nuclnucltax.sh"
 run_test EXTRACTORFS "run_extractorfs.sh"
 run_test RBH "run_rbh.sh"
 case "$(uname -s)" in
