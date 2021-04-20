@@ -17,7 +17,7 @@ if [ "$#" -lt 2 ]; then
   echo "Need at least 2 parameters!"
   exit 1
 fi
-export MMSEQS="$(abspath "$1")"
+export MMSEQS="$(abspath "$(command -v "$1")")"
 SCRATCH="$(abspath "$2")"
 RUN_ONLY="${3:-""}"
 
