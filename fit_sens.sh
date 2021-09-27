@@ -20,6 +20,7 @@ fi
 MMSEQS_OLD="$(abspath "$(command -v "$1")")"
 MMSEQS_NEW="$(abspath "$(command -v "$2")")"
 SCRATCH="$(abspath "$3")"
+mkdir -p "${SCRATCH}"
 RUN_ONLY="${4:-""}"
 
 BASE="$(dirname "$(abspath "$0")")"
@@ -55,6 +56,8 @@ run_test() {
   rm -rf "${RESULTS}" ${RESULTS}.report
 }
 
+TEST="DBPROFILE"
+TEST_SCRIPT="run_dbprofile.sh"
 KMER_SIZE=(5 6 7)
 for K in ${KMER_SIZE[@]}; do
 TARGET_SENS=(1 3 5 7)
@@ -64,14 +67,13 @@ export MMSEQS=${MMSEQS_OLD}
 : > "${SCRATCH}/fit.start"
 for i in $(seq 0 $((COUNT - 1))); do
     CURR_SENS=${TARGET_SENS[i]}
-    #run_test SLICEPROFILE "run_sliceprofile.sh" "-s ${CURR_SENS} -k ${K}"
-    run_test DBPROFILE "run_dbprofile.sh" "-s ${CURR_SENS} -k ${K}"
+    run_test "${TEST}" "${TEST_SCRIPT}" "-s ${CURR_SENS} -k ${K}"
     TARGET_ROC+=($CURR_ROC)
     echo -e "${CURR_SENS}\t${CURR_ROC}" | tee -a "${SCRATCH}/fit.start"
 done
 
-START_KMER_THR_HIGH=160
-START_KMER_THR_LOW=50
+START_KMER_THR_HIGH=180
+START_KMER_THR_LOW=60
 
 export MMSEQS=${MMSEQS_NEW}
 : > "${SCRATCH}/fit.opt"
@@ -92,8 +94,7 @@ for i in $(seq 0 $((COUNT - 1))); do
             break
         fi
         LAST_KMER_THR=$KMER_THR
-        #run_test SLICEPROFILE "run_sliceprofile.sh" "--k-score ${KMER_THR} -k ${K}"
-        run_test DBPROFILE "run_dbprofile.sh" "--k-score ${KMER_THR} -k ${K}"
+        run_test "${TEST}" "${TEST_SCRIPT}" "--k-score ${KMER_THR} -k ${K}"
         if (( $(echo "$CURR_ROC < $CURR_TARGET" | bc -l) )); then
             KMER_THR_HIGH=$(echo "$KMER_THR" | bc -l)
             LAST_REJECTED_THR=$KMER_THR
