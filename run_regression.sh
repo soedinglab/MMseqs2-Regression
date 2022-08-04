@@ -104,6 +104,7 @@ run_test INDEX_COMPATIBLE "run_index_compatible.sh"
 run_test FILTERDB "run_filterdb.sh"
 run_test PREF_DB_LOAD_MODE "run_prefilter_db_load_mode.sh"
 run_test FILTERTAXSEQDB "run_filtertaxseqdb.sh"
+run_test SEARCHTAXFILTER "run_searchtaxfilter.sh"
 case "$("${MMSEQS}" version)" in
 	*MPI)
 		export RUNNER="mpirun -np 1"
