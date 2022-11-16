@@ -112,7 +112,7 @@ case "$("${MMSEQS}" version)" in
 		run_test MPI_QUERY_SPLIT_NP1 "run_split.sh" 1
 		run_test MPI_SLICE_TECH_NP1 "run_slicetechnical.sh"
 		
-		export RUNNER="mpirun -np 3"
+		export RUNNER="mpirun -np 3 --oversubscribe"
 		run_test MPI_TARGET_SPLIT_NP3 "run_split.sh" 0
 		run_test MPI_QUERY_SPLIT_NP3 "run_split.sh" 1
 		run_test MPI_SLICE_TECH_NP3 "run_slicetechnical.sh"
