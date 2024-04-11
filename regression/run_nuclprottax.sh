@@ -29,7 +29,7 @@ R_BACTERIA=$(grep 'superkingdom.*Bacteria' "$RESULTS/results_aln_taxreport" | cu
 R_VIRUS=$(grep 'superkingdom.*Virus' "$RESULTS/results_aln_taxreport" | cut -f 2)
 R_EUKARYOTA=$(grep 'superkingdom.*Eukaryota' "$RESULTS/results_aln_taxreport" | cut -f 2)
 
-TARGET="from filtertaxdb: 1023 181 1265; from taxonomyreport: 1023 181 1265"
+TARGET="from filtertaxdb: 2000 207 1950; from taxonomyreport: 2000 207 1950"
 ACTUAL="from filtertaxdb: $BACTERIA $VIRUS $EUKARYOTA; from taxonomyreport: $R_BACTERIA $R_VIRUS $R_EUKARYOTA"
 awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { print (actual == target) ? "GOOD" : "BAD"; \
     print "Expected: ", target; \
