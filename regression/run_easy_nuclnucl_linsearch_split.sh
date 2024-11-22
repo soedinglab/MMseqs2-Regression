@@ -23,5 +23,5 @@ ln -sf "${TARGETDB}_h.dbtype" "${TARGETDB}_nucl_h.dbtype"
 ACTUAL=$(grep "^ROC5 AUC:" "${RESULTS}/evaluation.log" | cut -d" " -f3)
 TARGET="0.108903"
 awk -v actual="$ACTUAL" -v target="$TARGET" \
-    'BEGIN { print (actual >= target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
+    'BEGIN { print (actual == target) ? "GOOD" : "BAD"; print "Expected: ", target; print "Actual: ", actual; }' \
     > "${RESULTS}.report"
