@@ -123,6 +123,10 @@ case "$("${MMSEQS}" version)" in
 		run_test NOMPI_TARGET_SPLIT "run_split.sh" 0
 		run_test NOMPI_SLICE_TECH "run_slicetechnical.sh"
 esac
+if [ -z "${SKIP_GPU}" ] && [ -n "${CUDA_VISIBLE_DEVICES}" ]; then
+    run_test SEARCH_GPU "run_search_gpu.sh"
+    run_test SEARCH_GPU_SERVER "run_search_gpu_server.sh"
+fi
 
 set -e
 printf "\n"
