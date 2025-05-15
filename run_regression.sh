@@ -28,7 +28,7 @@ cd "${BASE}"
 (mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j4)
 
 export DATADIR="${BASE}/data"
-export SCRIPTS="${BASE}/regression"
+export SCRIPTS="${MMSEQS_SCRIPTS_PATH:-${BASE}/regression}"
 export EVALUATE="${BASE}/build/evaluate_results"
 export SAMTOOLS="${BASE}/samtools/samtools.sh"
 
