@@ -1,7 +1,7 @@
 #!/bin/sh -e
 "${MMSEQS}" createdb "${DATADIR}/clu.fasta" "${RESULTS}/clu"
 
-"${MMSEQS}" linclust "${RESULTS}/clu" "$RESULTS/results_clu" "$RESULTS/tmp" --cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --split-memory-limit 10M
+"${MMSEQS}" linclust "${RESULTS}/clu" "$RESULTS/results_clu" "$RESULTS/tmp" --cov-mode 1 --cluster-mode 0 -c 0.90 --min-seq-id 0.50 --split-memory-limit 10M --linclust-version 1 --alignment-mode 2
 "${MMSEQS}" createtsv "${RESULTS}/clu" "${RESULTS}/clu" "$RESULTS/results_clu" "$RESULTS/results_cluster.tsv"
 
 awk 'BEGIN { l = "" } l != $1 { l = $1; cnt++; } { t++; } END { print cnt"\t"t"\t"(t/cnt) }' "$RESULTS/results_cluster.tsv" > "$RESULTS/results_summary.tsv"

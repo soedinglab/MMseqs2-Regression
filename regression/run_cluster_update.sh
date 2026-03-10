@@ -9,8 +9,8 @@ cat "$RESULTS/clu1.fasta" "$RESULTS/clu2.fasta" > "$RESULTS/cluCombined.fasta"
 "${MMSEQS}" createdb "$RESULTS/clu1.fasta" "${SEQCLUDB1}"
 "${MMSEQS}" createdb "$RESULTS/cluCombined.fasta" "${SEQCLUDB2}"
 
-"${MMSEQS}" linclust "${SEQCLUDB1}" "$RESULTS/results_clu" "$RESULTS/tmp" --cov-mode 1 -a -c 0.50 --min-seq-id 0.50
-"${MMSEQS}" clusterupdate "${SEQCLUDB1}" "${SEQCLUDB2}" "$RESULTS/results_clu" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/tmp" --cov-mode 1 -c 0.50 --min-seq-id 0.50
+"${MMSEQS}" linclust "${SEQCLUDB1}" "$RESULTS/results_clu" "$RESULTS/tmp" --cov-mode 1 -a -c 0.50 --min-seq-id 0.50 --linclust-version 1
+"${MMSEQS}" clusterupdate "${SEQCLUDB1}" "${SEQCLUDB2}" "$RESULTS/results_clu" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/tmp" --cov-mode 1 -c 0.50 --min-seq-id 0.50 --linclust-version 1
 "${MMSEQS}" createtsv "$RESULTS/seqdb_update" "$RESULTS/seqdb_update" "$RESULTS/clu_updated" "$RESULTS/clu_updated.tsv"
 
 CLUSTERMEMEBER=$(wc -l "$RESULTS/clu_updated.tsv" | awk '{print $1}')
