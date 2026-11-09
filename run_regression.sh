@@ -95,6 +95,7 @@ run_test LINCLUST_UPDATE "run_cluster_update.sh"
 run_test EASYNUCLNUCLTAX_SEARCH "run_easy_nuclnucltax.sh"
 run_test EXTRACTORFS "run_extractorfs.sh"
 run_test RBH "run_rbh.sh"
+run_test FWBW "run_fwbw.sh"
 case "$(uname -s)" in
     CYGWIN*|MINGW32*|MSYS*|MINGW*)
         ;;
